@@ -53,7 +53,6 @@ dependencies {
     implementation(project(":data:exchangerate"))
     implementation(project(":data:common"))
     implementation(project(":data:favorite"))
-    implementation(project(":core"))
     implementation(project(":ui:detail"))
     implementation(project(":ui:search"))
     moduleDependency(":ui:common")

@@ -2,4 +2,5 @@
 <resources>
     <string name="home">Home</string>
     <string name="searchIcon">Search Icon</string>
+    <string name="menu">Menu</string>
 </resources>

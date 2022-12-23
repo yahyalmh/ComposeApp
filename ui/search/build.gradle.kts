@@ -52,6 +52,5 @@ dependencies {
     implementation(project(":data:favorite"))
     implementation(project(":data:common"))
     implementation(project(":ui:detail"))
-    implementation(project(":core"))
     moduleDependency(":ui:common")
 }

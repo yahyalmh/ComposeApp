@@ -4,9 +4,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.common.ThemeType
 import com.example.common.toThemeType
 import com.example.datastore.DatastoreInteractor
-import com.example.core.base.BaseViewModel
-import com.example.core.base.UIEvent
-import com.example.core.base.UIState
+import com.example.common.BaseViewModel
+import com.example.common.UIEvent
+import com.example.common.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

@@ -2,10 +2,10 @@ package com.example.favorite
 
 import androidx.lifecycle.viewModelScope
 import com.example.common.model.ExchangeRate
-import com.example.core.base.BaseViewModel
-import com.example.core.base.UIEvent
-import com.example.core.base.UIState
-import com.example.core.ext.retryWithPolicy
+import com.example.common.BaseViewModel
+import com.example.common.UIEvent
+import com.example.common.UIState
+import com.example.common.ext.retryWithPolicy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull

@@ -13,13 +13,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.common.RateCell
+import com.example.common.component.*
 import com.example.common.model.ExchangeRate
-import com.example.core.component.*
-import com.example.core.component.bar.SearchBar
-import com.example.core.component.icon.AppIcons
+import com.example.common.component.bar.SearchBar
+import com.example.common.component.icon.AppIcons
 import com.example.detail.nav.navigateToDetail
 import com.example.ui.search.R
-import com.example.core.R.string as coreR
 
 @Composable
 fun SearchScreen(
@@ -35,7 +34,6 @@ fun SearchScreen(
         isVisible = state.isAutoRetry,
         errorMessage = state.retryMsg,
         icon = AppIcons.Warning,
-        hint = stringResource(id = coreR.autoRetryHint)
     )
 
     RetryView(

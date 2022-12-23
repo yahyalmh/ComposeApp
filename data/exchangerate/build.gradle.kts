@@ -39,6 +39,6 @@ dependencies {
     coroutines()
     hilt()
     junit()
-    implementation(project(":core"))
+    implementation(project(":ui:common"))
     implementation(project(":data:common"))
 }

@@ -1,7 +1,7 @@
 package com.example.rate.interactor
 
 import com.example.common.model.ExchangeDetailRate
-import com.example.core.ext.repeatFlow
+import com.example.common.ext.repeatFlow
 import com.example.rate.model.toExternalModel
 import com.example.rate.repository.ExchangeRateRepository
 import kotlinx.coroutines.Dispatchers
@@ -21,10 +21,12 @@ class ExchangeRateInteractorImpl @Inject constructor(private val exchangeRateRep
     override fun getRates() = flow { emit(exchangeRates()) }.flowOn(Dispatchers.IO)
 
     override fun getLiveRates(interval: Long) =
-        repeatFlow(interval) { exchangeRates() }.flowOn(Dispatchers.IO)
+        com.example.common.ext.repeatFlow(interval) { exchangeRates() }.flowOn(Dispatchers.IO)
 
     override fun getLiveRate(id: String, interval: Long): Flow<ExchangeDetailRate> =
-        repeatFlow(interval) { exchangeRateRepository.getExchangeRate(id).toExternalModel() }
+        com.example.common.ext.repeatFlow(interval) {
+            exchangeRateRepository.getExchangeRate(id).toExternalModel()
+        }
             .flowOn(Dispatchers.IO)
 
     private suspend fun exchangeRates() = exchangeRateRepository.getExchangeRates()

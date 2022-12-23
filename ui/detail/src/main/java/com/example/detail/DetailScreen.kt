@@ -20,11 +20,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.common.model.ExchangeDetailRate
-import com.example.core.base.ReferenceDevices
-import com.example.core.component.LoadingView
-import com.example.core.component.RetryView
-import com.example.core.component.bar.AppBar
-import com.example.core.component.icon.AppIcons
+import com.example.common.ReferenceDevices
+import com.example.common.component.LoadingView
+import com.example.common.component.RetryView
+import com.example.common.component.bar.AppBar
+import com.example.common.component.icon.AppIcons
 import com.example.ui.detail.R
 
 /**

@@ -4,7 +4,7 @@ plugins {
     kotlin("kapt")
 }
 android {
-    namespace = "com.example.common"
+    namespace = "com.example.ui.common"
     compileSdk = AppConfig.compileSdk
 
     defaultConfig {
@@ -42,6 +42,5 @@ dependencies {
     compose()
     junit()
     composeMaterial()
-    moduleDependency(":core")
     moduleDependency(":data:common")
 }

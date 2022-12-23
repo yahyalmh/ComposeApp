@@ -48,6 +48,4 @@ dependencies {
     implementation(project(":ui:detail"))
     implementation(project(":ui:common"))
     implementation(project(":data:common"))
-    implementation(project(":core"))
-
 }

@@ -10,10 +10,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.common.RateCell
+import com.example.common.component.*
 import com.example.common.model.ExchangeRate
-import com.example.core.component.*
-import com.example.core.component.bar.AppBar
-import com.example.core.component.icon.AppIcons
+import com.example.common.component.bar.AppBar
+import com.example.common.component.icon.AppIcons
 import com.example.detail.nav.navigateToDetail
 import com.example.ui.favorite.R
 

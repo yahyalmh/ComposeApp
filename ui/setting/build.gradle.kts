@@ -52,7 +52,6 @@ dependencies {
     datastore()
 
     hilt()
-    moduleDependency(":core")
     moduleDependency(":ui:common")
     moduleDependency(":data:datastore")
 }

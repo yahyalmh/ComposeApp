@@ -14,7 +14,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "ComposeApp"
 include(":app")
-include(":core")
 include(":data:exchangerate")
 include(":ui:home")
 include(":ui:detail")
@@ -25,3 +24,4 @@ include(":data:datastore")
 include(":ui:setting")
 include(":ui:favorite")
 include(":data:favorite")
+include(":ui:main")

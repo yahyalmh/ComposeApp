@@ -13,19 +13,17 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.common.RateCell
+import com.example.common.ReferenceDevices
+import com.example.common.component.AutoRetryView
+import com.example.common.component.BaseLazyColumn
+import com.example.common.component.LoadingView
+import com.example.common.component.RetryView
+import com.example.common.component.bar.AppBar
+import com.example.common.component.icon.AppIcons
 import com.example.common.model.ExchangeRate
-import com.example.core.base.ReferenceDevices
-import com.example.core.component.AutoRetryView
-import com.example.core.component.BaseLazyColumn
-import com.example.core.component.LoadingView
-import com.example.core.component.RetryView
-import com.example.core.component.bar.AppBar
-import com.example.core.component.icon.AppIcons
 import com.example.detail.nav.navigateToDetail
 import com.example.search.nav.navigateToSearch
 import com.example.ui.home.R
-import com.example.core.R.string as coreR
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +47,7 @@ fun HomeScreen(
                     containerColor = MaterialTheme.colorScheme.background
                 ),
                 navigationIcon = AppIcons.Menu,
-                navigationIconContentDescription = stringResource(id = coreR.menu),
+                navigationIconContentDescription = stringResource(id = R.string.menu),
                 actionIcon = AppIcons.Search,
                 actionIconContentDescription = stringResource(id = R.string.searchIcon),
                 onActionClick = { navController.navigateToSearch() }
@@ -72,7 +70,6 @@ fun HomeScreen(
             isVisible = uiState.isAutoRetry,
             errorMessage = uiState.retryMsg,
             icon = AppIcons.Warning,
-            hint = stringResource(id = coreR.autoRetryHint)
         )
 
         ContentView(

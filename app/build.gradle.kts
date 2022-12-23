@@ -65,8 +65,8 @@ dependencies {
     retrofit()
 
     moduleDependency(":data:datastore")
-    implementation(project(":core"))
     implementation(project(":ui:home"))
+    implementation(project(":ui:main"))
     implementation(project(":ui:detail"))
     implementation(project(":ui:search"))
     implementation(project(":ui:common"))

@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.common.SharedState
 import com.example.common.model.ExchangeDetailRate
 import com.example.common.model.toExchangeRate
-import com.example.core.base.BaseViewModel
-import com.example.core.base.UIEvent
-import com.example.core.base.UIState
+import com.example.common.BaseViewModel
+import com.example.common.UIEvent
+import com.example.common.UIState
 import com.example.detail.nav.DetailArgs
 import com.example.favorite.FavoriteRatesInteractor
 import com.example.rate.interactor.ExchangeRateInteractor

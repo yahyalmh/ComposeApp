@@ -10,16 +10,16 @@ on:
     types: [opened, closed]
 
 jobs:
-  Detekt:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-      - name: Run Detekt
-        uses: natiginfo/action-detekt-all@1.22.0
+#  Detekt:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout Code
+#        uses: actions/checkout@v3
+#      - name: Run Detekt
+#        uses: natiginfo/action-detekt-all@1.22.0
 
   Lint:
-    needs: Detekt
+#    needs: Detekt
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code

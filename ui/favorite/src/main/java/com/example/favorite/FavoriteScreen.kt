@@ -1,10 +1,8 @@
 package com.example.favorite
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -73,7 +71,6 @@ fun FavoriteScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentView(
     modifier: Modifier = Modifier,
@@ -88,20 +85,10 @@ fun ContentView(
         modifier = modifier.background(MaterialTheme.colorScheme.surface)
     ) { rate ->
         RateCell(
-            rate = rate.rateUsd.toString(),
-            symbol = rate.symbol,
-            currencySymbol = rate.currencySymbol ?: rate.symbol,
-            type = rate.type,
+            rate = rate,
             onClick = { navigateToDetail(rate.id) },
-            leadingIcon = {
-                Icon(
-                    modifier = Modifier
-                        .size(AssistChipDefaults.IconSize)
-                        .clickable { onFavoriteClick(rate) },
-                    imageVector = AppIcons.Favorite,
-                    contentDescription = "Like Icon",
-                )
-            }
+            leadingIcon = AppIcons.Favorite,
+            onLeadingIconClick = onFavoriteClick
         )
     }
 }

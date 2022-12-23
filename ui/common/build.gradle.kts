@@ -42,4 +42,6 @@ dependencies {
     compose()
     junit()
     composeMaterial()
+    moduleDependency(":core")
+    moduleDependency(":data:common")
 }

@@ -1,9 +1,7 @@
 package com.example.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -15,7 +13,6 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.common.RateCell
-import com.example.common.database.ExchangeRateEntity
 import com.example.common.model.ExchangeRate
 import com.example.core.base.ReferenceDevices
 import com.example.core.component.AutoRetryView
@@ -89,7 +86,6 @@ fun HomeScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ContentView(
     modifier: Modifier,
@@ -109,20 +105,10 @@ private fun ContentView(
             AppIcons.FavoriteBorder
         }
         RateCell(
-            rate = rate.rateUsd.toString(),
-            symbol = rate.symbol,
-            currencySymbol = rate.currencySymbol ?: rate.symbol,
-            type = rate.type,
-            leadingIcon = {
-                Icon(
-                    modifier = Modifier
-                        .size(AssistChipDefaults.IconSize)
-                        .clickable { onFavoriteClick(rate) },
-                    imageVector = leadingIcon,
-                    contentDescription = "Like Icon",
-                )
-            },
-            onClick = { navigateToDetail(rate.id) }
+            rate = rate,
+            leadingIcon = leadingIcon,
+            onClick = { navigateToDetail(rate.id) },
+            onLeadingIconClick = onFavoriteClick
         )
     }
 }
@@ -145,23 +131,10 @@ private fun ratesStub(count: Int = 20): MutableList<ExchangeRate> {
 }
 
 @Composable
-private fun favoriteRatesStub(count: Int = 10): MutableList<ExchangeRateEntity> {
-    val rates = mutableListOf<ExchangeRateEntity>()
-    repeat(count) { rates.add(favoriteRateStub()) }
-    return rates
-}
-
-@Composable
 internal fun rateStub(): ExchangeRate = ExchangeRate(
     id = "1",
     symbol = "$",
     currencySymbol = "USD",
     type = "fiat",
     rateUsd = 0.165451654889.toBigDecimal()
-)
-
-@Composable
-internal fun favoriteRateStub() = ExchangeRateEntity(
-    id = "1",
-    symbol = "$",
 )

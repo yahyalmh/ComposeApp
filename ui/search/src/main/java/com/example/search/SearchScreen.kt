@@ -1,14 +1,10 @@
 package com.example.search
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -103,20 +99,10 @@ private fun ContentView(
                 AppIcons.FavoriteBorder
             }
         RateCell(
-            rate = rate.rateUsd.toString(),
-            symbol = rate.symbol,
-            currencySymbol = rate.currencySymbol ?: rate.symbol,
-            type = rate.type,
-            leadingIcon = {
-                Icon(
-                    modifier = Modifier
-                        .size(AssistChipDefaults.IconSize)
-                        .clickable { onFavoriteClick(rate) },
-                    imageVector = leadingIcon,
-                    contentDescription = "Like Icon",
-                )
-            },
-            onClick = { navigateToDetail(rate.id) }
+            rate = rate,
+            leadingIcon = leadingIcon,
+            onClick = { navigateToDetail(rate.id) },
+            onLeadingIconClick = onFavoriteClick
         )
     }
 }

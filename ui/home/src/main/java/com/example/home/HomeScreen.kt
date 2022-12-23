@@ -23,7 +23,7 @@ import com.example.core.component.BaseLazyColumn
 import com.example.core.component.LoadingView
 import com.example.core.component.RetryView
 import com.example.core.component.bar.AppBar
-import com.example.core.component.icon.Icons
+import com.example.core.component.icon.AppIcons
 import com.example.detail.nav.navigateToDetail
 import com.example.search.nav.navigateToSearch
 import com.example.ui.home.R
@@ -51,9 +51,9 @@ fun HomeScreen(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
                 ),
-                navigationIcon = Icons.Menu,
+                navigationIcon = AppIcons.Menu,
                 navigationIconContentDescription = stringResource(id = coreR.menu),
-                actionIcon = Icons.Search,
+                actionIcon = AppIcons.Search,
                 actionIconContentDescription = stringResource(id = R.string.searchIcon),
                 onActionClick = { navController.navigateToSearch() }
             )
@@ -66,7 +66,7 @@ fun HomeScreen(
         RetryView(
             isVisible = uiState.isRetry,
             errorMessage = uiState.retryMsg,
-            icon = Icons.Warning
+            icon = AppIcons.Warning
         ) {
             viewModel.onEvent(HomeUiEvent.Retry)
         }
@@ -74,7 +74,7 @@ fun HomeScreen(
         AutoRetryView(
             isVisible = uiState.isAutoRetry,
             errorMessage = uiState.retryMsg,
-            icon = Icons.Warning,
+            icon = AppIcons.Warning,
             hint = stringResource(id = coreR.autoRetryHint)
         )
 
@@ -104,9 +104,9 @@ private fun ContentView(
         modifier = modifier.background(MaterialTheme.colorScheme.surface)
     ) { rate ->
         val leadingIcon = if (favoritesRates.any { it.id == rate.id && it.symbol == rate.symbol }) {
-            Icons.Favorite
+            AppIcons.Favorite
         } else {
-            Icons.FavoriteBorder
+            AppIcons.FavoriteBorder
         }
         RateCell(
             rate = rate.rateUsd.toString(),

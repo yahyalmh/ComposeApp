@@ -15,7 +15,7 @@ import com.example.common.RateCell
 import com.example.common.model.ExchangeRate
 import com.example.core.component.*
 import com.example.core.component.bar.AppBar
-import com.example.core.component.icon.Icons
+import com.example.core.component.icon.AppIcons
 import com.example.detail.nav.navigateToDetail
 import com.example.ui.favorite.R
 
@@ -42,14 +42,14 @@ fun FavoriteScreen(
 
         EmptyView(
             modifier = Modifier, isVisible = uiState.isEmpty,
-            icon = Icons.Face,
+            icon = AppIcons.FavoriteBorder,
             message = stringResource(id = R.string.noFavoriteItemFound)
         )
 
         RetryView(
             isVisible = uiState.isRetry,
             errorMessage = uiState.retryMsg,
-            icon = Icons.Warning
+            icon = AppIcons.Warning
         ) {
             viewModel.onEvent(FavoriteUiEvent.Retry)
         }
@@ -57,7 +57,7 @@ fun FavoriteScreen(
         AutoRetryView(
             isVisible = uiState.isAutoRetry,
             errorMessage = uiState.retryMsg,
-            icon = Icons.Warning,
+            icon = AppIcons.Warning,
             hint = stringResource(id = R.string.autoRetryHint)
         )
 
@@ -98,7 +98,7 @@ fun ContentView(
                     modifier = Modifier
                         .size(AssistChipDefaults.IconSize)
                         .clickable { onFavoriteClick(rate) },
-                    imageVector = Icons.Favorite,
+                    imageVector = AppIcons.Favorite,
                     contentDescription = "Like Icon",
                 )
             }

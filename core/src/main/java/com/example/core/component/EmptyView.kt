@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.core.R
-import com.example.core.component.icon.Icons
+import com.example.core.component.icon.AppIcons
 
 @Composable
 fun EmptyView(
@@ -63,5 +63,5 @@ fun EmptyView(
 @Preview(showSystemUi = true)
 @Composable
 fun Preview() {
-    EmptyView(isVisible = true, icon = Icons.ThumbUp, message = "Not Found")
+    EmptyView(isVisible = true, icon = AppIcons.Search, message = "Not Found")
 }

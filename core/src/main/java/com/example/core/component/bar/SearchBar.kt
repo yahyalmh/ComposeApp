@@ -31,7 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.example.core.R
-import com.example.core.component.icon.Icons
+import com.example.core.component.icon.AppIcons
 
 @Composable
 fun SearchBar(
@@ -71,7 +71,7 @@ fun SearchBar(
         ) {
             Icon(
                 modifier = Modifier.size(20.dp),
-                imageVector = Icons.Search,
+                imageVector = AppIcons.Search,
                 contentDescription = stringResource(id = R.string.search),
                 tint = MaterialTheme.colorScheme.onSecondary
             )
@@ -126,7 +126,7 @@ fun SearchBar(
                             onQueryChange(value)
                         }
                         .size(20.dp),
-                    imageVector = Icons.Close,
+                    imageVector = AppIcons.Close,
                     contentDescription = stringResource(id = R.string.search),
                     tint = MaterialTheme.colorScheme.onSecondary
                 )

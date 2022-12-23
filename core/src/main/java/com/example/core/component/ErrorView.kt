@@ -18,7 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.core.R
-import com.example.core.component.icon.Icons
+import com.example.core.component.icon.AppIcons
 
 /**
  * @author yaya (@yahyalmh)
@@ -128,13 +128,13 @@ fun AutoRetryView(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun RetryPreview() {
-    RetryView(icon = Icons.Warning, errorMessage = "This is a error message") {}
+    RetryView(icon = AppIcons.Warning, errorMessage = "This is a error message") {}
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun AutoRetryPreview() {
     AutoRetryView(
-        icon = Icons.Warning, errorMessage = "This is a error message", hint = "Go online to try again"
+        icon = AppIcons.Warning, errorMessage = "This is a error message", hint = "Go online to try again"
     )
 }

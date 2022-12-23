@@ -23,7 +23,7 @@ import com.example.core.base.ReferenceDevices
 import com.example.core.component.LoadingView
 import com.example.core.component.RetryView
 import com.example.core.component.bar.AppBar
-import com.example.core.component.icon.Icons
+import com.example.core.component.icon.AppIcons
 import com.example.ui.detail.R
 
 /**
@@ -48,13 +48,13 @@ fun DetailScreen(
                     containerColor = MaterialTheme.colorScheme.background
                 ),
                 actionIcon = if (state.isFavorite) {
-                    Icons.Favorite
+                    AppIcons.Favorite
                 } else {
-                    Icons.FavoriteBorder
+                    AppIcons.FavoriteBorder
                 },
                 onActionClick = {viewModel.onEvent(DetailUiEvent.OnFavorite(state.rate)) },
                 actionIconContentDescription = stringResource(id = R.string.favoriteIcon),
-                navigationIcon = Icons.ArrowBack,
+                navigationIcon = AppIcons.ArrowBack,
                 navigationIconContentDescription = "Back",
                 onNavigationClick = {
                     viewModel.onEvent(DetailUiEvent.NavigationBack)
@@ -69,7 +69,7 @@ fun DetailScreen(
         RetryView(
             isVisible = state.isError,
             errorMessage = state.errorMsg,
-            icon = Icons.Warning
+            icon = AppIcons.Warning
         ) { viewModel.onEvent(DetailUiEvent.Retry) }
 
         ContentView(modifier.padding(padding), state)

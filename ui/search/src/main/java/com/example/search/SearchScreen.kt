@@ -21,7 +21,7 @@ import com.example.common.RateCell
 import com.example.common.model.ExchangeRate
 import com.example.core.component.*
 import com.example.core.component.bar.SearchBar
-import com.example.core.component.icon.Icons
+import com.example.core.component.icon.AppIcons
 import com.example.detail.nav.navigateToDetail
 import com.example.ui.search.R
 import com.example.core.R.string as coreR
@@ -39,20 +39,20 @@ fun SearchScreen(
     AutoRetryView(
         isVisible = state.isAutoRetry,
         errorMessage = state.retryMsg,
-        icon = Icons.Warning,
+        icon = AppIcons.Warning,
         hint = stringResource(id = coreR.autoRetryHint)
     )
 
     RetryView(
         isVisible = state.isRetry,
         errorMessage = state.errorMsg,
-        icon = Icons.Warning
+        icon = AppIcons.Warning
     ) { viewModel.onEvent(SearchUiEvent.Retry) }
 
     EmptyView(
         modifier = modifier,
         isVisible = state.isEmpty,
-        icon = Icons.Face,
+        icon = AppIcons.Search,
         message = stringResource(id = R.string.noItemFound)
     )
 
@@ -98,9 +98,9 @@ private fun ContentView(
     ) { rate ->
         val leadingIcon =
             if (state.favoriteRates.any { it.id == rate.id && it.symbol == rate.symbol }) {
-                Icons.Favorite
+                AppIcons.Favorite
             } else {
-                Icons.FavoriteBorder
+                AppIcons.FavoriteBorder
             }
         RateCell(
             rate = rate.rateUsd.toString(),

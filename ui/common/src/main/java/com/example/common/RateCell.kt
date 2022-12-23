@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.common.model.ExchangeRate
 import com.example.core.component.icon.AppIcons
+import java.util.*
 
 @Composable
 fun RateCell(
@@ -79,19 +80,24 @@ private fun Content(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
-                text = rate.rateUsd.toString(),
+                text = "Rate: ${rate.rateUsd.toString()}",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             Text(
-                text = rate.symbol,
+                text = "Symbol: ${rate.symbol}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = rate.type,
-                style = MaterialTheme.typography.bodyMedium,
+                text = "Type: ${
+                    rate.type.replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(Locale.ROOT)
+                        else it.toString()
+                    }
+                }",
+                        style = MaterialTheme . typography . bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
@@ -120,7 +126,7 @@ fun RateCellPreview() {
         rate = ExchangeRate(
             id = "1",
             rateUsd = 3.343234342.toBigDecimal(),
-            symbol = "$$",
+            symbol = "$",
             currencySymbol = "USD",
             type = "Fiat"
         ),

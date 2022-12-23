@@ -1,6 +1,5 @@
 package com.example.core.component.bar
 
-import android.R
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -9,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,12 +18,13 @@ import androidx.compose.ui.zIndex
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
+    modifier: Modifier = Modifier,
     @StringRes titleRes: Int,
     navigationIcon: ImageVector,
     navigationIconContentDescription: String?,
     actionIcon: ImageVector,
+    actionIconColor: Color = MaterialTheme.colorScheme.onSurface,
     actionIconContentDescription: String?,
-    modifier: Modifier = Modifier,
     colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
     onNavigationClick: () -> Unit = {},
     onActionClick: () -> Unit = {}
@@ -44,7 +45,7 @@ fun AppBar(
                 Icon(
                     imageVector = actionIcon,
                     contentDescription = actionIconContentDescription,
-                    tint = MaterialTheme.colorScheme.onSurface
+                    tint = actionIconColor
                 )
             }
         },
@@ -131,7 +132,7 @@ fun AppBar(
 @Composable
 fun TopAppBarPreview() {
     AppBar(
-        titleRes = R.string.untitled,
+        titleRes = R.string.expanded,
         navigationIcon = Icons.Default.Menu,
         navigationIconContentDescription = "Navigation icon",
         actionIcon = Icons.Default.Search,

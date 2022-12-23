@@ -2,6 +2,7 @@ package com.example.favorite
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.*
@@ -11,12 +12,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.common.RateCell
-import com.example.core.component.*
-import com.example.ui.favorite.R
 import com.example.common.model.ExchangeRate
+import com.example.core.component.*
 import com.example.core.component.bar.AppBar
 import com.example.core.component.icon.Icons
 import com.example.detail.nav.navigateToDetail
+import com.example.ui.favorite.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,8 +26,8 @@ fun FavoriteScreen(
     viewModel: FavoriteViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.state.value
-    androidx.compose.material.Scaffold(
-        contentColor = androidx.compose.material.MaterialTheme.colors.onBackground,
+    Scaffold(
+        contentColor = MaterialTheme.colorScheme.surface,
         topBar = {
             AppBar(
                 titleRes = R.string.favorite,
@@ -62,7 +63,9 @@ fun FavoriteScreen(
 
         ContentView(
             isVisible = uiState is FavoriteUiState.Loaded,
-            modifier = Modifier.padding(padding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
             rates = uiState.rates,
             navigateToDetail = { rateId -> navController.navigateToDetail(rateId) },
             onFavoriteClick = { rate -> viewModel.onEvent(FavoriteUiEvent.OnFavorite(rate)) }
@@ -79,7 +82,11 @@ fun ContentView(
     navigateToDetail: (id: String) -> Unit,
     onFavoriteClick: (rate: ExchangeRate) -> Unit
 ) {
-    BaseLazyColumn(isVisible = isVisible, items = rates, modifier = modifier.background(MaterialTheme.colorScheme.surface)) { rate ->
+    BaseLazyColumn(
+        isVisible = isVisible,
+        items = rates,
+        modifier = modifier.background(MaterialTheme.colorScheme.surface)
+    ) { rate ->
         RateCell(
             rate = rate.rateUsd.toString(),
             symbol = rate.symbol,
@@ -97,5 +104,4 @@ fun ContentView(
             }
         )
     }
-
 }

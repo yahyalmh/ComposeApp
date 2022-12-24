@@ -39,13 +39,13 @@ dependencies {
 
     compose()
     composeNavigation()
-    composeViewmodel()
+    composeViewModel()
     composeMaterial()
     hilt()
     junit()
 
-    implementation(project(":data:favorite"))
-    implementation(project(":ui:detail"))
-    implementation(project(":ui:common"))
-    implementation(project(":data:common"))
+    moduleDependency(":data:favorite")
+    moduleDependency(":ui:detail")
+    moduleDependency(":ui:common")
+    moduleDependency(":data:common")
 }

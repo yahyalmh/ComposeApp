@@ -43,17 +43,17 @@ android {
 dependencies {
     compose()
     composeNavigation()
-    composeViewmodel()
+    composeViewModel()
     composeMaterial()
     junit()
 
-    composeConstraintlayout()
+    composeConstraintLayout()
     hilt()
 
-    implementation(project(":data:exchangerate"))
-    implementation(project(":data:common"))
-    implementation(project(":data:favorite"))
-    implementation(project(":ui:detail"))
-    implementation(project(":ui:search"))
+    moduleDependency(":data:exchangerate")
+    moduleDependency(":data:common")
+    moduleDependency(":data:favorite")
+    moduleDependency(":ui:detail")
+    moduleDependency(":ui:search")
     moduleDependency(":ui:common")
 }

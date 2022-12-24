@@ -2,7 +2,7 @@ package com.example.favorite
 
 import com.example.common.database.ExchangeRateEntity
 import com.example.common.model.ExchangeRate
-import com.example.rate.interactor.ExchangeRateInteractor
+import com.example.rate.ExchangeRateInteractor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject

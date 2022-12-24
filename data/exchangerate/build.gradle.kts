@@ -38,7 +38,9 @@ dependencies {
     retrofit()
     coroutines()
     hilt()
-    junit()
-    implementation(project(":ui:common"))
-    implementation(project(":data:common"))
+    junit5()
+    espresso()
+    mockito()
+    moduleDependency(":ui:common")
+    moduleDependency(":data:common")
 }

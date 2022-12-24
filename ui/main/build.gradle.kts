@@ -43,11 +43,11 @@ android {
 dependencies {
     compose()
     composeNavigation()
-    composeViewmodel()
+    composeViewModel()
     composeMaterial()
     junit()
 
-    composeConstraintlayout()
+    composeConstraintLayout()
     hilt()
     moduleDependency(":ui:common")
     moduleDependency(":ui:home")

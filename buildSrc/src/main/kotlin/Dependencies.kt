@@ -1,4 +1,3 @@
-
 import Dependencies.ROOM_COMPILER
 import Dependencies.ROOM_KTX
 import Dependencies.ROOM_RUNTIME
@@ -31,12 +30,12 @@ object Dependencies {
         "androidx.compose.material3:material3-window-size-class"
     const val COMPOSE_NAVIGATION =
         "androidx.navigation:navigation-compose:${Version.Compose.NAVIGATION}"
-    const val COMPOSE_VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-compose"
+    const val COMPOSE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-compose"
     const val COMPOSE_HILT_NAVIGATION =
         "androidx.hilt:hilt-navigation-compose:${Version.Compose.HILT_NAVIGATION}"
     const val COMPOSE_UI_TEST = "androidx.compose.ui:ui-test-junit4"
     const val COMPOSE_UI_TEST_MANIFEST = "androidx.compose.ui:ui-test-manifest"
-    const val COMPOSE_CONSTRAINTLAYOUT =
+    const val COMPOSE_CONSTRAINT_LAYOUT =
         "androidx.constraintlayout:constraintlayout-compose:${Version.Compose.CONSTRAINTLAYOUT}"
 
 
@@ -45,10 +44,17 @@ object Dependencies {
 
     const val JUNIT = "junit:junit:${Version.Junit.JUNIT}"
     const val ANDROIDX_JUNIT = "androidx.test.ext:junit:${Version.Junit.ANDROIDX_JUNIT}"
+    const val JUNIT5_API = "org.junit.jupiter:junit-jupiter-api:${Version.Junit.JUNIT5}"
+    const val JUNIT5_ENGINE = "org.junit.jupiter:junit-jupiter-engine:${Version.Junit.JUNIT5}"
+    const val JUNIT5_PARAMS = "org.junit.jupiter:junit-jupiter-params:${Version.Junit.JUNIT5}"
+
+    const val MOCKITO_CORE = "org.mockito:mockito-core:${Version.Mockito.CORE}"
+    const val MOCKITO_INLINE = "org.mockito:mockito-inline:${Version.Mockito.CORE}"
+    const val MOCKITO_JUNIT = "org.mockito:mockito-junit-jupiter:${Version.Mockito.CORE}"
+    const val MOCKITO_KOTLIN = "org.mockito.kotlin:mockito-kotlin:${Version.Mockito.KOTLIN}"
 
     const val ANDROIDX_ESPRESSO_CORE =
         "androidx.test.espresso:espresso-core:${Version.ESPRESSO_CORE}"
-
 
     const val RETROFIT = "com.squareup.retrofit2:retrofit:${Version.Retrofit.RETROFIT}"
     const val RETROFIT_GSON_CONVERTER =
@@ -97,7 +103,6 @@ fun DependencyHandler.room() {
 //    implementation(ROOM_COROUTINE)
     annotationProcessor(ROOM_COMPILER)
     kapt(ROOM_COMPILER)
-//    ksp(ROOM_COMPILER)
     testImplementation(ROOM_TEST)
     implementation(ROOM_KTX)
 }
@@ -118,12 +123,12 @@ fun DependencyHandler.composeNavigation() {
     implementation(Dependencies.COMPOSE_NAVIGATION)
 }
 
-fun DependencyHandler.composeViewmodel() {
-    implementation(Dependencies.COMPOSE_VIEWMODEL)
+fun DependencyHandler.composeViewModel() {
+    implementation(Dependencies.COMPOSE_VIEW_MODEL)
 }
 
-fun DependencyHandler.composeConstraintlayout() {
-    implementation(Dependencies.COMPOSE_CONSTRAINTLAYOUT)
+fun DependencyHandler.composeConstraintLayout() {
+    implementation(Dependencies.COMPOSE_CONSTRAINT_LAYOUT)
 }
 
 fun DependencyHandler.coroutines() {
@@ -154,6 +159,18 @@ fun DependencyHandler.junit() {
     androidTestImplementation(Dependencies.ANDROIDX_JUNIT)
 }
 
+fun DependencyHandler.junit5() {
+    testImplementation(Dependencies.JUNIT5_API)
+    testImplementation(Dependencies.JUNIT5_PARAMS)
+    testRuntimeOnly(Dependencies.JUNIT5_ENGINE)
+}
+fun DependencyHandler.mockito() {
+    testImplementation(Dependencies.MOCKITO_CORE)
+    testImplementation(Dependencies.MOCKITO_JUNIT)
+    testImplementation(Dependencies.MOCKITO_INLINE)
+    testImplementation(Dependencies.MOCKITO_KOTLIN)
+}
+
 fun DependencyHandler.moduleDependency(path: String) {
     implementation(project(path))
 }
@@ -174,6 +191,7 @@ fun DependencyHandler.androidTestImplementation(dependency: Dependency) =
     add("androidTestImplementation", dependency)
 
 fun DependencyHandler.testImplementation(depName: String) = add("testImplementation", depName)
+fun DependencyHandler.testRuntimeOnly(depName: String) = add("testRuntimeOnly", depName)
 
 fun DependencyHandler.debugImplementation(depName: String) = add("debugImplementation", depName)
 
@@ -182,6 +200,5 @@ private fun DependencyHandler.runtimeOnly(depName: String) = add("runtimeOnly", 
 
 private fun DependencyHandler.api(depName: String) = add("api", depName)
 
-//private fun DependencyHandler.ksp(depName: String) = add("ksp", depName)
 private fun DependencyHandler.annotationProcessor(depName: String) =
     add("annotationProcessor", depName)

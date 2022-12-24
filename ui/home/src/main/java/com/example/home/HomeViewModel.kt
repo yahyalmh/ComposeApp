@@ -8,7 +8,7 @@ import com.example.common.UIState
 import com.example.common.ext.retryWithPolicy
 import com.example.favorite.FavoriteRatesInteractor
 import com.example.home.util.Constant
-import com.example.rate.interactor.ExchangeRateInteractor
+import com.example.rate.ExchangeRateInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine

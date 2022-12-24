@@ -4,6 +4,11 @@
  */
 
 object Version {
+    object Mockito {
+        const val CORE = "4.10.0"
+        const val KOTLIN = "3.2.0"
+    }
+
     const val ROOM_VERSION = "2.4.3"
 
     const val ESPRESSO_CORE = "3.4.0"
@@ -46,6 +51,7 @@ object Version {
     }
 
     object Junit {
+        const val JUNIT5 = "5.9.1"
         const val JUNIT = "4.13.2"
         const val ANDROIDX_JUNIT = "1.1.3"
     }

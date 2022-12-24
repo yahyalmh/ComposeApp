@@ -65,11 +65,11 @@ dependencies {
     retrofit()
 
     moduleDependency(":data:datastore")
-    implementation(project(":ui:home"))
-    implementation(project(":ui:main"))
-    implementation(project(":ui:detail"))
-    implementation(project(":ui:search"))
-    implementation(project(":ui:common"))
-    implementation(project(":ui:setting"))
-    implementation(project(":ui:favorite"))
+    moduleDependency(":ui:home")
+    moduleDependency(":ui:main")
+    moduleDependency(":ui:detail")
+    moduleDependency(":ui:search")
+    moduleDependency(":ui:common")
+    moduleDependency(":ui:setting")
+    moduleDependency(":ui:favorite")
 }

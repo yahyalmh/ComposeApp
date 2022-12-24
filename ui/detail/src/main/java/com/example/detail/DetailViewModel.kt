@@ -10,7 +10,7 @@ import com.example.common.UIEvent
 import com.example.common.UIState
 import com.example.detail.nav.DetailArgs
 import com.example.favorite.FavoriteRatesInteractor
-import com.example.rate.interactor.ExchangeRateInteractor
+import com.example.rate.ExchangeRateInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine

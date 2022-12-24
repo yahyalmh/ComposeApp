@@ -45,7 +45,7 @@ dependencies {
 
     compose()
     composeNavigation()
-    composeViewmodel()
+    composeViewModel()
     composeMaterial()
     junit()
 

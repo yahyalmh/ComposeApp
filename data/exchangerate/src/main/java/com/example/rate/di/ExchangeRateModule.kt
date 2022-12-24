@@ -2,10 +2,10 @@ package com.example.rate.di
 
 import com.example.common.api.CoinCapRetrofit
 import com.example.rate.api.ExchangeRateApi
-import com.example.rate.interactor.ExchangeRateInteractor
-import com.example.rate.interactor.ExchangeRateInteractorImpl
-import com.example.rate.repository.ExchangeRateRepository
-import com.example.rate.repository.ExchangeRateRepositoryImpl
+import com.example.rate.ExchangeRateInteractor
+import com.example.rate.ExchangeRateInteractorImpl
+import com.example.rate.ExchangeRateRepository
+import com.example.rate.ExchangeRateRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

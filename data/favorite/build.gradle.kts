@@ -37,7 +37,7 @@ android {
 dependencies {
     coroutines()
     hilt()
-    junit()
+    junit4()
     moduleDependency(":data:exchangerate")
     moduleDependency(":data:common")
 }

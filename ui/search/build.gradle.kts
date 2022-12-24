@@ -46,7 +46,7 @@ dependencies {
     composeViewModel()
     composeMaterial()
     hilt()
-    junit()
+    junit4()
 
     moduleDependency(":data:exchangerate")
     moduleDependency(":data:favorite")

@@ -1,3 +1,4 @@
+import Dependencies.JUNIT_KTX
 import Dependencies.ROOM_COMPILER
 import Dependencies.ROOM_KTX
 import Dependencies.ROOM_RUNTIME
@@ -42,11 +43,16 @@ object Dependencies {
     const val HILT_ANDROID = "com.google.dagger:hilt-android:${Version.Hilt.HILT_ANDROID}"
     const val HILT_COMPILER = "com.google.dagger:hilt-compiler:${Version.Hilt.HILT_COMPILER}"
 
+    const val ANDROIDX_JUNIT = "androidx.test.ext:junit:${Version.Androidx.ANDROIDX_JUNIT}"
+    const val ANDROIDX_TEST_CORE = "androidx.test:core:${Version.Androidx.ANDROIDX_TEST}"
+    const val ANDROIDX_TEST_RUNNER = "androidx.test:runner:${Version.Androidx.ANDROIDX_TEST}"
+
     const val JUNIT = "junit:junit:${Version.Junit.JUNIT}"
-    const val ANDROIDX_JUNIT = "androidx.test.ext:junit:${Version.Junit.ANDROIDX_JUNIT}"
     const val JUNIT5_API = "org.junit.jupiter:junit-jupiter-api:${Version.Junit.JUNIT5}"
     const val JUNIT5_ENGINE = "org.junit.jupiter:junit-jupiter-engine:${Version.Junit.JUNIT5}"
     const val JUNIT5_PARAMS = "org.junit.jupiter:junit-jupiter-params:${Version.Junit.JUNIT5}"
+    const val JUNIT5_VINTAGE = "org.junit.vintage:junit-vintage-engine:${Version.Junit.VINTAGE}"
+    const val JUNIT_KTX = "androidx.test.ext:junit-ktx:${Version.Junit.KTX}"
 
     const val MOCKITO_CORE = "org.mockito:mockito-core:${Version.Mockito.CORE}"
     const val MOCKITO_INLINE = "org.mockito:mockito-inline:${Version.Mockito.CORE}"
@@ -154,16 +160,24 @@ fun DependencyHandler.datastore() {
     implementation(Dependencies.DATA_STORE)
 }
 
-fun DependencyHandler.junit() {
+fun DependencyHandler.junit4() {
+    implementation(JUNIT_KTX)
     testImplementation(Dependencies.JUNIT)
+}
+
+fun DependencyHandler.androidXTest() {
     androidTestImplementation(Dependencies.ANDROIDX_JUNIT)
+    androidTestImplementation(Dependencies.ANDROIDX_TEST_CORE)
+    androidTestImplementation(Dependencies.ANDROIDX_TEST_RUNNER)
 }
 
 fun DependencyHandler.junit5() {
     testImplementation(Dependencies.JUNIT5_API)
     testImplementation(Dependencies.JUNIT5_PARAMS)
+    testImplementation(Dependencies.JUNIT5_VINTAGE)
     testRuntimeOnly(Dependencies.JUNIT5_ENGINE)
 }
+
 fun DependencyHandler.mockito() {
     testImplementation(Dependencies.MOCKITO_CORE)
     testImplementation(Dependencies.MOCKITO_JUNIT)

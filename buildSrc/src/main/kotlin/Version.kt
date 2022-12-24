@@ -31,6 +31,8 @@ object Version {
     object Androidx {
         const val CORE_KTX = "1.9.0"
         const val LIFECYCLE = "2.6.0-alpha03"
+        const val ANDROIDX_TEST = "1.5.0"
+        const val ANDROIDX_JUNIT = "1.1.3"
     }
 
     object Compose {
@@ -51,8 +53,9 @@ object Version {
     }
 
     object Junit {
+        const val KTX= "1.1.4"
+        const val VINTAGE = "5.9.1"
         const val JUNIT5 = "5.9.1"
         const val JUNIT = "4.13.2"
-        const val ANDROIDX_JUNIT = "1.1.3"
     }
 }

@@ -40,7 +40,7 @@ android {
 
 dependencies {
     compose()
-    junit()
+    junit4()
     composeMaterial()
     moduleDependency(":data:common")
 }

@@ -39,6 +39,6 @@ android {
 dependencies {
     retrofit()
     hilt()
-    junit()
+    junit4()
     room()
 }

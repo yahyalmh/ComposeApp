@@ -47,7 +47,7 @@ dependencies {
     composeNavigation()
     composeViewModel()
     composeMaterial()
-    junit()
+    junit4()
 
     datastore()
 

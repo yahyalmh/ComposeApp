@@ -5,4 +5,5 @@ plugins {
     id("org.jetbrains.kotlin.android") version "1.6.10" apply false
     id("org.jetbrains.kotlin.jvm") version "1.7.20" apply false
     id("com.google.dagger.hilt.android") version Version.Hilt.HILT_ANDROID apply false
+    id("de.mannodermaus.android-junit5") version "1.8.2.1" apply false
 }

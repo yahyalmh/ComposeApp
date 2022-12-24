@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("de.mannodermaus.android-junit5")
 }
 
 android {
@@ -39,6 +40,7 @@ dependencies {
     coroutines()
     hilt()
     junit5()
+    androidXTest()
     espresso()
     mockito()
     moduleDependency(":ui:common")

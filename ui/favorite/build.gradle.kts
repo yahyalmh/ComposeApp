@@ -42,7 +42,7 @@ dependencies {
     composeViewModel()
     composeMaterial()
     hilt()
-    junit()
+    junit4()
 
     moduleDependency(":data:favorite")
     moduleDependency(":ui:detail")

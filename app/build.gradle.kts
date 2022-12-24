@@ -59,7 +59,7 @@ dependencies {
     composeMaterial()
     composeNavigation()
     hilt()
-    junit()
+    junit4()
     espresso()
     composeTest()
     retrofit()

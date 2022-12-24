@@ -36,6 +36,6 @@ android {
 dependencies {
     coroutines()
     hilt()
-    junit()
+    junit4()
    datastore()
 }

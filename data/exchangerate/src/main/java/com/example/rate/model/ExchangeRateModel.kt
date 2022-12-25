@@ -40,6 +40,10 @@ data class ExchangeRatesModel(
     val rates: List<ExchangeRateModel>
 )
 
+fun ExchangeRatesModel.toExternalModel(): List<ExchangeRate> =
+    this.rates.map { it.toExternalModel() }
+
+
 data class ExchangeRateDetailModel(
     @SerializedName("data")
     val rateDetail: ExchangeRateModel,

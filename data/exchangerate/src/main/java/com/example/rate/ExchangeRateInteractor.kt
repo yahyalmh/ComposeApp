@@ -35,6 +35,6 @@ class ExchangeRateInteractorImpl @Inject constructor(private val exchangeRateRep
         }.flowOn(Dispatchers.IO)
 
     private suspend fun exchangeRates() = exchangeRateRepository.getExchangeRates()
-        .rates.map { rate -> rate.toExternalModel() }
+        .toExternalModel()
         .sortedByDescending { it.symbol }
 }

@@ -21,12 +21,12 @@ fun <T> repeatFlow(interval: Long, block: suspend () -> T): Flow<T> =
 
 fun <T> Flow<T>.retryWithPolicy(
     retryPolicy: RetryPolicy = RetryPolicy.DefaultRetryPolicy,
-    retryHandler: () -> Unit
+    retryHandler: (e: Throwable) -> Unit
 ): Flow<T> {
     var currentDelay = retryPolicy.delayMillis
 
     return retryWhen { cause, attempt ->
-        retryHandler()
+        retryHandler(cause)
         if (cause is IOException && attempt < retryPolicy.numRetries) {
             delay(currentDelay)
             currentDelay *= retryPolicy.delayFactor

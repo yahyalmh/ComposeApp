@@ -1,5 +1,6 @@
 package com.example.rate
 
+import com.example.common.ext.RandomString
 import com.example.rate.model.ExchangeRateDetailModel
 import com.example.rate.model.ExchangeRateModel
 import com.example.rate.model.ExchangeRatesModel
@@ -17,9 +18,9 @@ fun exchangeRatesStub(count: Int = 10): List<ExchangeRateModel> {
 
 fun exchangeRateModelStub() = ExchangeRateModel(
     id = Random.nextInt().toString(),
-    symbol = Random.nextString(),
-    currencySymbol = Random.nextString(),
-    type = Random.nextString(),
+    symbol = RandomString.next(),
+    currencySymbol = RandomString.next(),
+    type = RandomString.next(),
     rateUsd = Random.nextFloat().toString()
 )
 
@@ -27,13 +28,3 @@ fun exchangeRateDetailModelStub() = ExchangeRateDetailModel(
     rateDetail = exchangeRateModelStub(),
     timestamp = Random.nextLong().toString()
 )
-
-fun Random.nextString(length: Int = 10, withNumbers: Boolean = true): String {
-    val charsSet = (('A'..'Z') + ('a'..'z')).toMutableList()
-    if (withNumbers) {
-        charsSet += ('0'..'9')
-    }
-    return (1..length)
-        .map { charsSet.random() }
-        .joinToString("")
-}

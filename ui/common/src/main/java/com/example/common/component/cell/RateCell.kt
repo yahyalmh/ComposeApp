@@ -1,4 +1,4 @@
-package com.example.common
+package com.example.common.component.cell
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,8 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.common.model.ExchangeRate
 import com.example.common.component.icon.AppIcons
+import com.example.common.model.ExchangeRate
 import java.util.*
 
 @Composable

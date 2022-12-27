@@ -12,13 +12,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.common.RateCell
 import com.example.common.ReferenceDevices
 import com.example.common.component.AutoRetryView
 import com.example.common.component.BaseLazyColumn
 import com.example.common.component.LoadingView
 import com.example.common.component.RetryView
-import com.example.common.component.bar.AppBar
+import com.example.common.component.bar.TopAppBar
+import com.example.common.component.cell.RateCell
 import com.example.common.component.icon.AppIcons
 import com.example.common.model.ExchangeRate
 import com.example.detail.nav.navigateToDetail
@@ -28,15 +28,15 @@ import com.example.ui.home.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    navController: NavHostController,
     modifier: Modifier = Modifier,
+    navController: NavHostController,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surface,
         topBar = {
-            AppBar(
-                titleRes = R.string.home,
+            TopAppBar(
+                title = stringResource(id = R.string.home),
                 modifier = Modifier
                     .zIndex(1F)
                     .shadow(
@@ -56,7 +56,10 @@ fun HomeScreen(
     ) { padding ->
         val uiState = viewModel.state.value
 
-        LoadingView(isLoading = uiState.isLoading)
+        LoadingView(
+            modifier = Modifier.padding(padding),
+            isVisible = uiState.isLoading
+        )
 
         RetryView(
             isVisible = uiState.isRetry,
@@ -68,14 +71,13 @@ fun HomeScreen(
 
         AutoRetryView(
             isVisible = uiState.isAutoRetry,
-            errorMessage = uiState.retryMsg,
+            errorMessage = uiState.autoRetryMsg,
             icon = AppIcons.Warning,
         )
 
         ContentView(
-            isVisible = uiState is HomeUiState.Loaded,
-            modifier = modifier
-                .padding(padding),
+            isVisible = uiState.isLoaded,
+            modifier = modifier.padding(padding),
             rates = uiState.rates,
             favoritesRates = uiState.favoriteRates,
             navigateToDetail = { rateId -> navController.navigateToDetail(rateId) }
@@ -93,7 +95,8 @@ private fun ContentView(
     onFavoriteClick: (rate: ExchangeRate) -> Unit
 ) {
     BaseLazyColumn(
-        isVisible = isVisible, items = rates,
+        isVisible = isVisible,
+        items = rates,
         modifier = modifier.background(MaterialTheme.colorScheme.surface)
     ) { rate ->
         val leadingIcon = if (favoritesRates.any { it.id == rate.id && it.symbol == rate.symbol }) {

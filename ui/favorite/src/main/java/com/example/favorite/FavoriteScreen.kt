@@ -9,11 +9,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.common.RateCell
+import com.example.common.component.cell.RateCell
 import com.example.common.component.*
-import com.example.common.model.ExchangeRate
-import com.example.common.component.bar.AppBar
+import com.example.common.component.bar.TopAppBar
 import com.example.common.component.icon.AppIcons
+import com.example.common.model.ExchangeRate
 import com.example.detail.nav.navigateToDetail
 import com.example.ui.favorite.R
 
@@ -27,8 +27,8 @@ fun FavoriteScreen(
     Scaffold(
         contentColor = MaterialTheme.colorScheme.surface,
         topBar = {
-            AppBar(
-                titleRes = R.string.favorite,
+            TopAppBar(
+                title = stringResource(id = R.string.favorite),
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
                 ),
@@ -36,7 +36,7 @@ fun FavoriteScreen(
         }
     ) { padding ->
 
-        LoadingView(isLoading = uiState.isLoading)
+        LoadingView(isVisible = uiState.isLoading)
 
         EmptyView(
             modifier = Modifier, isVisible = uiState.isEmpty,
@@ -54,13 +54,13 @@ fun FavoriteScreen(
 
         AutoRetryView(
             isVisible = uiState.isAutoRetry,
-            errorMessage = uiState.retryMsg,
+            errorMessage = uiState.autoRetryMsg,
             icon = AppIcons.Warning,
             hint = stringResource(id = R.string.autoRetryHint)
         )
 
         ContentView(
-            isVisible = uiState is FavoriteUiState.Loaded,
+            isVisible = uiState.isLoaded,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding),

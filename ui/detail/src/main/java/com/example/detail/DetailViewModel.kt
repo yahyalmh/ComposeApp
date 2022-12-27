@@ -2,12 +2,12 @@ package com.example.detail
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.example.common.SharedState
-import com.example.common.model.ExchangeDetailRate
-import com.example.common.model.toExchangeRate
 import com.example.common.BaseViewModel
+import com.example.common.SharedState
 import com.example.common.UIEvent
 import com.example.common.UIState
+import com.example.common.model.ExchangeDetailRate
+import com.example.common.model.toExchangeRate
 import com.example.detail.nav.DetailArgs
 import com.example.favorite.FavoriteRatesInteractor
 import com.example.rate.ExchangeRateInteractor
@@ -34,7 +34,7 @@ class DetailViewModel @Inject constructor(
 
     init {
         changeBottomBarVisibility(false)
-        fetchRate()
+        fetchRateDetail()
     }
 
     private fun changeBottomBarVisibility(enabled: Boolean) {
@@ -43,7 +43,7 @@ class DetailViewModel @Inject constructor(
         }
     }
 
-    private fun fetchRate() {
+    private fun fetchRateDetail() {
         combine(
             exchangeRateInteractor.getLiveRate(detailArgs.rateId),
             favoriteRatesInteractor.getFavoriteRates()
@@ -54,17 +54,16 @@ class DetailViewModel @Inject constructor(
                     favoritesRate.any { it.id == rate.id })
             )
         }
-            .catch { e ->
-                handleError(e)
-            }.launchIn(viewModelScope)
+            .catch { e -> handleError(e) }
+            .launchIn(viewModelScope)
     }
 
     private fun handleError(e: Throwable) {
         val errorMessage = e.message ?: "Error while fetching the exchange rate"
-        setState(DetailUiState.Error(errorMessage))
+        setState(DetailUiState.Retry(errorMessage))
     }
 
-    private fun handleFavorite(rate: ExchangeDetailRate?) {
+    private fun handleFavoriteClick(rate: ExchangeDetailRate?) {
         viewModelScope.launch {
             rate?.toExchangeRate()?.let { exchangeRate ->
                 val favoriteRates = favoriteRatesInteractor.getFavoriteRates().firstOrNull()
@@ -87,11 +86,11 @@ class DetailViewModel @Inject constructor(
     override fun onEvent(event: DetailUiEvent) {
         when (event) {
             DetailUiEvent.Retry -> {
-                fetchRate()
+                fetchRateDetail()
                 setState(DetailUiState.Loading)
             }
             DetailUiEvent.NavigationBack -> changeBottomBarVisibility(true)
-            is DetailUiEvent.OnFavorite -> handleFavorite(event.rate)
+            is DetailUiEvent.OnFavoriteClick -> handleFavoriteClick(event.rate)
 
         }
     }
@@ -100,26 +99,28 @@ class DetailViewModel @Inject constructor(
 sealed interface DetailUiEvent : UIEvent {
     object Retry : DetailUiEvent
     object NavigationBack : DetailUiEvent
-    class OnFavorite(val rate: ExchangeDetailRate?) : DetailUiEvent
+    class OnFavoriteClick(val rate: ExchangeDetailRate?) : DetailUiEvent
 
 }
 
 sealed class DetailUiState(
-    val rate: ExchangeDetailRate? = null,
+    val rateDetail: ExchangeDetailRate? = null,
     val isFavorite: Boolean = false,
     val isLoading: Boolean = false,
+    val isLoaded: Boolean = false,
     val isError: Boolean = false,
     val errorMsg: String = "",
 ) : UIState {
     object Loading : DetailUiState(isLoading = true)
 
-    class Error(errorMsg: String) : DetailUiState(
+    class Retry(errorMsg: String) : DetailUiState(
         isError = true,
         errorMsg = errorMsg
     )
 
     class Loaded(rate: ExchangeDetailRate, isFavorite: Boolean) : DetailUiState(
-        rate = rate,
+        isLoaded = true,
+        rateDetail = rate,
         isFavorite = isFavorite,
     )
 }

@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
+    id("de.mannodermaus.android-junit5")
 }
 android {
     namespace = "com.example.ui.common"
@@ -40,7 +41,9 @@ android {
 
 dependencies {
     compose()
-    junit4()
+    coroutines()
+    junit5()
+
     composeMaterial()
     moduleDependency(":data:common")
 }

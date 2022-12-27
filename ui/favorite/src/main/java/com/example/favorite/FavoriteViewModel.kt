@@ -1,11 +1,11 @@
 package com.example.favorite
 
 import androidx.lifecycle.viewModelScope
-import com.example.common.model.ExchangeRate
 import com.example.common.BaseViewModel
 import com.example.common.UIEvent
 import com.example.common.UIState
 import com.example.common.ext.retryWithPolicy
+import com.example.common.model.ExchangeRate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
@@ -19,15 +19,15 @@ class FavoriteViewModel @Inject constructor(
     private val favoriteRatesInteractor: FavoriteRatesInteractor
 ) : BaseViewModel<FavoriteUiState, FavoriteUiEvent>(FavoriteUiState.Loading) {
     init {
-        fetchFavorite()
+        fetchFavoriteRates()
     }
 
-    private fun fetchFavorite() {
+    private fun fetchFavoriteRates() {
         viewModelScope.launch {
             favoriteRatesInteractor.getLiveFavoriteRates()
-                .retryWithPolicy { handleRetry() }
+                .retryWithPolicy { e -> handleRetry(e) }
                 .catch { e -> handleError(e) }
-                .onEach {result ->
+                .onEach { result ->
                     when {
                         result.isEmpty() -> setState(FavoriteUiState.Empty())
                         else -> setState(FavoriteUiState.Loaded(rates = result))
@@ -39,12 +39,12 @@ class FavoriteViewModel @Inject constructor(
     private fun handleFavorite(rate: ExchangeRate) {
         viewModelScope.launch {
             val favoriteRates = favoriteRatesInteractor.getFavoriteRates().firstOrNull()
-            if (favoriteRates.isNullOrEmpty()){
+            if (favoriteRates.isNullOrEmpty()) {
                 favoriteRatesInteractor.addFavorite(rate)
-            }else{
-                if (favoriteRates.any { it.id == rate.id }){
+            } else {
+                if (favoriteRates.any { it.id == rate.id }) {
                     favoriteRatesInteractor.removeFavorite(rate)
-                }else{
+                } else {
                     favoriteRatesInteractor.addFavorite(rate)
                 }
             }
@@ -57,15 +57,15 @@ class FavoriteViewModel @Inject constructor(
         setState(FavoriteUiState.Retry(retryMsg = errorMessage))
     }
 
-    private fun handleRetry() {
-        val retryMsg = "Loading data is failed"
+    private fun handleRetry(e: Throwable) {
+        val retryMsg = e.message ?: "Loading data is failed"
         setState(FavoriteUiState.AutoRetry(retryMsg))
     }
 
     override fun onEvent(event: FavoriteUiEvent) {
         when (event) {
             FavoriteUiEvent.Retry -> {
-                fetchFavorite()
+                fetchFavoriteRates()
                 setState(FavoriteUiState.Loading)
             }
             is FavoriteUiEvent.OnFavorite -> handleFavorite(event.rate)
@@ -85,17 +85,19 @@ sealed class FavoriteUiState(
     val retryMsg: String = "",
     val isAutoRetry: Boolean = false,
     val autoRetryMsg: String = "",
-    val isEmpty: Boolean = false
+    val isEmpty: Boolean = false,
+    val isLoaded: Boolean = false,
 ) : UIState {
 
     object Loading : FavoriteUiState(isLoading = true)
 
     class Retry(retryMsg: String) : FavoriteUiState(isRetry = true, retryMsg = retryMsg)
 
-    class AutoRetry(autoRetryMsg: String) : FavoriteUiState(isAutoRetry = true, retryMsg = autoRetryMsg)
+    class AutoRetry(autoRetryMsg: String) :
+        FavoriteUiState(isAutoRetry = true, autoRetryMsg = autoRetryMsg)
 
-    class Loaded(rates: List<ExchangeRate>) : FavoriteUiState(rates = rates)
+    class Loaded(rates: List<ExchangeRate>) : FavoriteUiState(isLoaded = true, rates = rates)
 
-    class Empty(query: String = "") : FavoriteUiState(isEmpty = true)
+    class Empty() : FavoriteUiState(isEmpty = true)
 
 }

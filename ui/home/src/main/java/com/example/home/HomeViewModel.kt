@@ -1,11 +1,11 @@
 package com.example.home
 
 import androidx.lifecycle.viewModelScope
-import com.example.common.model.ExchangeRate
 import com.example.common.BaseViewModel
 import com.example.common.UIEvent
 import com.example.common.UIState
 import com.example.common.ext.retryWithPolicy
+import com.example.common.model.ExchangeRate
 import com.example.favorite.FavoriteRatesInteractor
 import com.example.home.util.Constant
 import com.example.rate.ExchangeRateInteractor
@@ -33,17 +33,15 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun fetchRates() {
-        viewModelScope.launch {
-            combine(
-                exchangeRateInteractor.getLiveRates(Constant.liveRateFetchInterval),
-                favoriteRatesInteractor.getFavoriteRates()
-            ) { rates, favoriteRates ->
-                    setState(HomeUiState.Loaded(rates = rates, favoriteRates = favoriteRates))
-                }
-                .retryWithPolicy { handleRetry() }
-                .catch { e -> handleError(e) }
-                .launchIn(viewModelScope)
+        combine(
+            exchangeRateInteractor.getLiveRates(Constant.liveRateFetchInterval),
+            favoriteRatesInteractor.getFavoriteRates()
+        ) { rates, favoriteRates ->
+            setState(HomeUiState.Loaded(rates = rates, favoriteRates = favoriteRates))
         }
+            .retryWithPolicy { handleRetry() }
+            .catch { e -> handleError(e) }
+            .launchIn(viewModelScope)
     }
 
     private fun handleFavorite(rate: ExchangeRate) {
@@ -62,6 +60,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun handleError(e: Throwable) {
+        println(e.printStackTrace())
         val errorMessage = e.message ?: "Error while fetching the exchange rates"
         setState(HomeUiState.Retry(retryMsg = errorMessage))
     }
@@ -90,15 +89,17 @@ sealed class HomeUiState(
     val retryMsg: String = "",
     val isAutoRetry: Boolean = false,
     val autoRetryMsg: String = "",
+    val isLoaded: Boolean = false
 ) : UIState {
     object Loading : HomeUiState(isLoading = true)
 
     class Retry(retryMsg: String) : HomeUiState(isRetry = true, retryMsg = retryMsg)
 
-    class AutoRetry(autoRetryMsg: String) : HomeUiState(isAutoRetry = true, retryMsg = autoRetryMsg)
+    class AutoRetry(autoRetryMsg: String) :
+        HomeUiState(isAutoRetry = true, autoRetryMsg = autoRetryMsg)
 
     class Loaded(rates: List<ExchangeRate>, favoriteRates: List<ExchangeRate>) :
-        HomeUiState(rates = rates, favoriteRates = favoriteRates)
+        HomeUiState(isLoaded = true, rates = rates, favoriteRates = favoriteRates)
 }
 
 sealed interface HomeUiEvent : UIEvent {

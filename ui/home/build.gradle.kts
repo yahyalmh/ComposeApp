@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("de.mannodermaus.android-junit5")
 }
 
 android {
@@ -45,7 +46,13 @@ dependencies {
     composeNavigation()
     composeViewModel()
     composeMaterial()
-    junit4()
+
+    coroutines()
+
+    junit5()
+    androidXTest()
+    espresso()
+    mockito()
 
     composeConstraintLayout()
     hilt()
@@ -56,4 +63,5 @@ dependencies {
     moduleDependency(":ui:detail")
     moduleDependency(":ui:search")
     moduleDependency(":ui:common")
+//    testModuleDependency(":ui:common")
 }

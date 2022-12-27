@@ -16,30 +16,32 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.common.ThemeType
 import com.example.common.component.LoadingView
-import com.example.common.component.bar.AppBar
+import com.example.common.component.bar.TopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingScreen(
+    modifier: Modifier = Modifier,
     navController: NavHostController,
     viewModel: SettingViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.state.value
-    androidx.compose.material.Scaffold(
+    Scaffold(
         topBar = {
-            AppBar(
-                titleRes = R.string.setting,
+            TopAppBar(
+                title = stringResource(id = R.string.setting),
                 colors = TopAppBarDefaults
                     .centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             )
         }
     ) { padding ->
 
-        LoadingView(isLoading = uiState.isLoading)
+        LoadingView(isVisible = uiState.isLoading)
 
         ContentView(
-            modifier = Modifier.padding(padding),
-            uiState.currentThemeType
+            modifier = modifier.padding(padding),
+            isVisible = uiState.isLoaded,
+            currentThemeType = uiState.currentThemeType
         ) {
             viewModel.onEvent(SettingUiEvent.ChangeTheme(it))
         }
@@ -50,55 +52,56 @@ fun SettingScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 private fun ContentView(
     modifier: Modifier = Modifier,
+    isVisible: Boolean,
     currentThemeType: ThemeType?,
     onChangeTheme: (theme: ThemeType) -> Unit
 ) {
     val themeTypes = ThemeType.values().asList()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(12.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    ) {
-
-        Text(
+    AnimatedVisibility(modifier = modifier, visible = isVisible) {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            color = MaterialTheme.colorScheme.onBackground,
-            text = stringResource(id = R.string.theme),
-            style = MaterialTheme.typography.titleLarge
-        )
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
 
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                color = MaterialTheme.colorScheme.onBackground,
+                text = stringResource(id = R.string.theme),
+                style = MaterialTheme.typography.titleLarge
+            )
 
-        Row {
-            themeTypes.forEach { type ->
-                AssistChip(
-                    modifier = Modifier.padding(8.dp),
-                    onClick = { onChangeTheme(type) },
-                    label = { Text(type.name) },
-                    leadingIcon = {
-                        AnimatedVisibility(visible = currentThemeType == type) {
-                            Icon(
-                                Icons.Filled.Check,
-                                contentDescription = "Check Icon",
-                                Modifier.size(AssistChipDefaults.IconSize)
-                            )
+            Row {
+                themeTypes.forEach { type ->
+                    AssistChip(
+                        modifier = Modifier.padding(8.dp),
+                        onClick = { onChangeTheme(type) },
+                        label = { Text(type.name) },
+                        leadingIcon = {
+                            AnimatedVisibility(visible = currentThemeType == type) {
+                                Icon(
+                                    Icons.Filled.Check,
+                                    contentDescription = "Check Icon",
+                                    Modifier.size(AssistChipDefaults.IconSize)
+                                )
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
-        }
 
-        Divider(modifier = Modifier.padding(top = 6.dp))
+            Divider(modifier = Modifier.padding(top = 6.dp))
+        }
     }
 }
 
 @Preview(showSystemUi = true)
 @Composable
 fun ContentPreview() {
-    ContentView(currentThemeType = ThemeType.SYSTEM) {}
+    ContentView(currentThemeType = ThemeType.SYSTEM, isVisible = true) {}
 }

@@ -10,6 +10,7 @@ import com.example.common.model.ExchangeRate
 import com.example.favorite.FavoriteRatesInteractor
 import com.example.rate.ExchangeRateInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -19,9 +20,9 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val exchangeRateInteractor: ExchangeRateInteractor,
     private val favoriteRatesInteractor: FavoriteRatesInteractor,
-) : BaseViewModel<SearchUiState, SearchUiEvent>(SearchUiState.Empty()) {
+) : BaseViewModel<SearchUiState, SearchUiEvent>(SearchUiState.Start()) {
     private val searchFlow = MutableStateFlow(state.value.query)
-    lateinit var job: Job
+    lateinit var searchJob: Job
 
     init {
         changeBottomBarVisibility(false)
@@ -34,58 +35,58 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    @OptIn(FlowPreview::class)
     private fun observeQueryChange() {
         searchFlow
             .debounce(300)
             .distinctUntilChanged()
             .onEach { query ->
-                if (::job.isInitialized && job.isActive) {
-                    job.cancel()
+                if (::searchJob.isInitialized && searchJob.isActive) {
+                    searchJob.cancel()
                 }
 
                 when {
-                    query.isBlank() && query.isEmpty() -> setState(SearchUiState.Empty())
+                    query.isBlank() && query.isEmpty() -> setState(SearchUiState.Start())
                     query.isNotResetState() -> searchQuery(query)
                 }
             }.launchIn(viewModelScope)
     }
 
     private fun searchQuery(query: String) {
-        job =
-            viewModelScope.launch {
-                combine(
-                    exchangeRateInteractor.getRates(),
-                    favoriteRatesInteractor.getFavoriteRates()
-                ) { rates, favoriteRates ->
-                    val result = rates.filter {
-                        it.symbol.contains(query, ignoreCase = true)
-                    }
-                    when {
-                        result.isEmpty() -> setState(SearchUiState.Empty(state.value.query))
-                        else -> setState(
-                            SearchUiState.Loaded(
-                                result = result,
-                                favoriteRates = favoriteRates,
-                                state.value.query
-                            )
-                        )
-                    }
+        setState(SearchUiState.Loading(query = state.value.query))
+        searchJob =
+            combine(
+                exchangeRateInteractor.getRates(),
+                favoriteRatesInteractor.getFavoriteRates()
+            ) { rates, favoriteRates ->
+                val result = rates.filter {
+                    it.symbol.contains(query, ignoreCase = true)
                 }
-                    .retryWithPolicy { handleRetry() }
-                    .catch { e -> handleError(e) }
-                    .launchIn(viewModelScope)
+                when {
+                    result.isEmpty() -> setState(SearchUiState.Empty(state.value.query))
+                    else -> setState(
+                        SearchUiState.Loaded(
+                            result = result,
+                            favoriteRates = favoriteRates,
+                            state.value.query
+                        )
+                    )
+                }
             }
+                .retryWithPolicy { e -> handleRetry(e) }
+                .catch { e -> handleError(e) }
+                .launchIn(viewModelScope)
     }
 
     private fun handleError(e: Throwable) {
         searchFlow.value = restString
         val errorMessage = e.message ?: "Error while fetching the exchange rate"
-        setState(SearchUiState.Error(errorMessage, query = state.value.query))
+        setState(SearchUiState.Retry(errorMessage, query = state.value.query))
     }
 
-    private fun handleRetry() {
-        val retryMsg = "No result for \"${state.value.query}\""
-        setState(SearchUiState.Retry(retryMsg, query = state.value.query))
+    private fun handleRetry(e: Throwable) {
+        val autoRetryMsg = e.message ?: "No result for \"${state.value.query}\""
+        setState(SearchUiState.AutoRetry(autoRetryMsg, query = state.value.query))
     }
 
     private fun handleFavorite(rate: ExchangeRate) {
@@ -138,24 +139,29 @@ sealed class SearchUiState(
     val result: List<ExchangeRate> = emptyList(),
     val favoriteRates: List<ExchangeRate> = emptyList(),
     val isLoading: Boolean = false,
+    val isLoaded: Boolean = false,
+    val isKeyboardHidden: Boolean = false,
     val isRetry: Boolean = false,
     val isAutoRetry: Boolean = false,
     val isEmpty: Boolean = false,
-    val errorMsg: String = "",
+    val isStart: Boolean = false,
     val retryMsg: String = "",
+    val autoRetryMsg: String = "",
     var query: String
 ) : UIState {
     class Loading(query: String) : SearchUiState(isLoading = true, query = query)
 
-    class Error(errorMsg: String, query: String) : SearchUiState(
+    class Retry(retryMsg: String, query: String) : SearchUiState(
         isRetry = true,
-        errorMsg = errorMsg,
+        retryMsg = retryMsg,
+        isKeyboardHidden = true,
         query = query
     )
 
-    class Retry(retryMsg: String, query: String) : SearchUiState(
+    class AutoRetry(autoRetryMsg: String, query: String) : SearchUiState(
         isAutoRetry = true,
-        retryMsg = retryMsg,
+        isKeyboardHidden = true,
+        autoRetryMsg = autoRetryMsg,
         query = query
     )
 
@@ -163,10 +169,17 @@ sealed class SearchUiState(
 
     class Empty(query: String = "") : SearchUiState(isEmpty = true, query = query)
 
+    class Start(query: String = "") : SearchUiState(isStart = true, query = query)
+
     class Loaded(
         result: List<ExchangeRate>,
         favoriteRates: List<ExchangeRate>,
         query: String
     ) :
-        SearchUiState(result = result, favoriteRates = favoriteRates, query = query)
+        SearchUiState(
+            isLoaded = true,
+            result = result,
+            favoriteRates = favoriteRates,
+            query = query
+        )
 }

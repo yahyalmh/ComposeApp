@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="noItemFound">No Item Found</string>
-    <string name="autoRetryHint">Go online to retry again</string>
+    <string name="noItemFound">No item found for </string>
+    <string name="startSearchHint">Search and mark currencies you like</string>
+    <string name="searchAutoRetryHint">Go online to search again</string>
 </resources>

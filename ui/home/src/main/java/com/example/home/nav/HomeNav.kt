@@ -21,6 +21,6 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.homeGraph(navController: NavHostController) {
     composable(route = homeRoute) {
-        HomeScreen(navController)
+        HomeScreen(navController = navController)
     }
 }

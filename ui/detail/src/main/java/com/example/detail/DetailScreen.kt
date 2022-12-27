@@ -19,12 +19,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.common.model.ExchangeDetailRate
 import com.example.common.ReferenceDevices
 import com.example.common.component.LoadingView
 import com.example.common.component.RetryView
-import com.example.common.component.bar.AppBar
+import com.example.common.component.bar.TopAppBar
 import com.example.common.component.icon.AppIcons
+import com.example.common.model.ExchangeDetailRate
 import com.example.ui.detail.R
 
 /**
@@ -43,8 +43,8 @@ fun DetailScreen(
     Scaffold(
         contentColor = MaterialTheme.colorScheme.surface,
         topBar = {
-            AppBar(
-                titleRes = R.string.detail,
+            TopAppBar(
+                title = stringResource(id = R.string.detail),
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
                 ),
@@ -54,7 +54,7 @@ fun DetailScreen(
                     AppIcons.FavoriteBorder
                 },
                 actionIconColor = Color.Red,
-                onActionClick = {viewModel.onEvent(DetailUiEvent.OnFavorite(state.rate)) },
+                onActionClick = { viewModel.onEvent(DetailUiEvent.OnFavoriteClick(state.rateDetail)) },
                 actionIconContentDescription = stringResource(id = R.string.favoriteIcon),
                 navigationIcon = AppIcons.ArrowBack,
                 navigationIconContentDescription = "Back",
@@ -66,7 +66,7 @@ fun DetailScreen(
         }
     ) { padding ->
 
-        LoadingView(isLoading = state.isLoading)
+        LoadingView(isVisible = state.isLoading)
 
         RetryView(
             isVisible = state.isError,
@@ -74,16 +74,21 @@ fun DetailScreen(
             icon = AppIcons.Warning
         ) { viewModel.onEvent(DetailUiEvent.Retry) }
 
-        ContentView(modifier.padding(padding), state)
+        ContentView(
+            modifier = modifier.padding(padding),
+            isVisible = state.isLoaded,
+            rateDetail = state.rateDetail
+        )
     }
 }
 
 @Composable
 private fun ContentView(
     modifier: Modifier,
-    state: DetailUiState
+    isVisible: Boolean,
+    rateDetail: ExchangeDetailRate?,
 ) {
-    if (state is DetailUiState.Loaded) {
+    if (isVisible) {
         Column(
             modifier = modifier
                 .background(MaterialTheme.colorScheme.background)
@@ -99,11 +104,11 @@ private fun ContentView(
                     .padding(vertical = 15.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = state.rate?.let { it.currencySymbol ?: it.symbol } ?: "",
+                Text(text = rateDetail?.let { it.currencySymbol ?: it.symbol } ?: "",
                     style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.ExtraBold),
                     color = MaterialTheme.colorScheme.onSecondaryContainer)
             }
-            state.rate?.run {
+            rateDetail?.run {
                 Text(
                     modifier = modifier.padding(top = 10.dp),
                     textAlign = TextAlign.Center,
@@ -144,6 +149,5 @@ fun ContentPreview() {
         rateUsd = 0.16544654.toBigDecimal(),
         timestamp = 1324654312
     )
-    val state = DetailUiState.Loaded(rateDetail, true)
-    ContentView(modifier = Modifier, state = state)
+    ContentView(modifier = Modifier, isVisible = true, rateDetail = rateDetail)
 }

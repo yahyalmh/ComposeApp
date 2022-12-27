@@ -1,16 +1,20 @@
 package com.example.main
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.common.ThemeType
 import com.example.compose.nav.AppNavHost
 import com.example.main.theme.AppTheme
@@ -21,14 +25,20 @@ import com.example.main.theme.AppTheme
  */
 @Composable
 fun MainScreen(
+    modifier: Modifier = Modifier,
     navController: NavHostController,
     viewModel: MainViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.state.value
 
-    val darkTheme = shouldUseDarkTheme(viewModel.state.value)
-    AppTheme(useDarkTheme = darkTheme) {
-        ContentView(uiState, navController, viewModel.bottomBarTabs) { tab ->
+    val useDarkTheme = shouldUseDarkTheme(uiState.themeType)
+    AppTheme(useDarkTheme = useDarkTheme) {
+        ContentView(
+            modifier = modifier,
+            uiState = uiState,
+            navController = navController,
+            bottomBarTabs = viewModel.bottomBarTabs
+        ) { tab ->
             viewModel.onEvent(MainUiEvent.ChangeTab(navController, tab))
         }
     }
@@ -36,19 +46,21 @@ fun MainScreen(
 
 @Composable
 private fun ContentView(
-    uiState: MainUiState,
+    modifier: Modifier = Modifier,
     navController: NavHostController,
+    uiState: MainUiState,
     bottomBarTabs: List<BottomBarTab>,
     onNavigateToDestination: (BottomBarTab) -> Unit
 ) {
     Column {
-        NetStatusView(uiState.showOnlineView, uiState.showOfflineView)
+        NetStatusView(uiState.isOnlineViewVisible, uiState.isOfflineViewVisible)
+
         Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            contentColor = MaterialTheme.colors.background,
+            modifier = modifier.fillMaxSize(),
+            contentColor = MaterialTheme.colorScheme.surface,
             bottomBar = {
                 AnimatedVisibility(visible = uiState.isBottomBarVisible) {
-                    AppBottomBar(
+                    BottomAppBar(
                         destinations = bottomBarTabs,
                         onNavigateToDestination = onNavigateToDestination,
                         currentDestination = navController.currentBackStackEntryAsState().value?.destination,
@@ -77,11 +89,40 @@ private fun SetupAppNavHost(
 }
 
 @Composable
-fun shouldUseDarkTheme(uiState: MainUiState): Boolean =
-    when (uiState.themeType) {
+fun shouldUseDarkTheme(themeType: ThemeType?): Boolean =
+    when (themeType) {
         ThemeType.SYSTEM -> isSystemInDarkTheme()
         ThemeType.LIGHT -> false
         ThemeType.DARK -> true
         else -> isSystemInDarkTheme()
     }
+
+@Composable
+@Preview(showSystemUi = false, name = "OfflinePreview", device = Devices.PHONE)
+fun OfflineContentPreview() {
+    val navController = rememberNavController()
+    ContentView(
+        uiState = MainUiState.Offline(),
+        bottomBarTabs = BottomBarTab.values().asList(),
+        navController = navController,
+        onNavigateToDestination = {}
+    )
+}
+
+@Composable
+@Preview(
+    showSystemUi = false,
+    name = "OnlinePreview",
+    device = Devices.PHONE,
+    uiMode = UI_MODE_NIGHT_YES
+)
+fun OnlineContentPreview() {
+    val navController = rememberNavController()
+    ContentView(
+        uiState = MainUiState.Online(),
+        bottomBarTabs = BottomBarTab.values().asList(),
+        navController = navController,
+        onNavigateToDestination = {}
+    )
+}
 

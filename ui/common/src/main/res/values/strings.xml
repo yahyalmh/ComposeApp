@@ -4,4 +4,5 @@
     <string name="emptyIcon">Empty Icon</string>
     <string name="search">Search</string>
     <string name="autoRetryHint">Go online to try again</string>
+    <string name="autoRetryIconDescription">Auto retry icon</string>
 </resources>

@@ -8,9 +8,11 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.example.common.component.icon.IconType
@@ -19,14 +21,19 @@ import com.example.main.NiaNavigationDefaults.navigationSelectedItemColor
 import com.example.ui.main.R
 
 @Composable
-fun AppBottomBar(
+fun BottomAppBar(
     destinations: List<BottomBarTab>,
     onNavigateToDestination: (BottomBarTab) -> Unit,
     currentDestination: NavDestination?,
     modifier: Modifier = Modifier
 ) {
     NavigationBar(
-        modifier = modifier,
+        modifier = modifier
+            .zIndex(1F)
+            .shadow(
+                elevation = 5.dp,
+                spotColor = MaterialTheme.colorScheme.onSurface
+            ),
         contentColor = navigationContentColor(),
         tonalElevation = 0.dp
     ) {
@@ -49,7 +56,7 @@ fun AppBottomBar(
                         )
                         is IconType.DrawableResourceIcon -> Icon(
                             painter = painterResource(id = icon.id),
-                            contentDescription = null
+                            contentDescription = stringResource(id = destination.iconTextId)
                         )
                     }
                 },
@@ -60,7 +67,7 @@ fun AppBottomBar(
                     unselectedTextColor = navigationContentColor(),
                     indicatorColor = NiaNavigationDefaults.navigationIndicatorColor()
                 ),
-                label = { Text(stringResource(destination.iconTextId)) }
+                label = { Text(stringResource(destination.titleTextId)) }
             )
         }
     }

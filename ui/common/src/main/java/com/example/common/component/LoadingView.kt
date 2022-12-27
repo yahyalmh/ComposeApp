@@ -14,10 +14,10 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun LoadingView(
-    isLoading: Boolean,
     modifier: Modifier = Modifier,
+    isVisible: Boolean,
 ) {
-    if (isLoading) {
+    if (isVisible) {
         BaseCenterColumn(
             modifier = modifier
                 .background(MaterialTheme.colorScheme.background)
@@ -28,5 +28,5 @@ fun LoadingView(
 @Preview(showBackground = true)
 @Composable
 fun LoadingPreview() {
-    LoadingView(isLoading = true)
+    LoadingView(isVisible = true)
 }

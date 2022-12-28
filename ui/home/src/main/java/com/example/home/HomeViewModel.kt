@@ -39,7 +39,7 @@ class HomeViewModel @Inject constructor(
         ) { rates, favoriteRates ->
             setState(HomeUiState.Loaded(rates = rates, favoriteRates = favoriteRates))
         }
-            .retryWithPolicy { handleRetry() }
+            .retryWithPolicy { e -> handleRetry(e) }
             .catch { e -> handleError(e) }
             .launchIn(viewModelScope)
     }
@@ -65,16 +65,16 @@ class HomeViewModel @Inject constructor(
         setState(HomeUiState.Retry(retryMsg = errorMessage))
     }
 
-    private fun handleRetry() {
-        val retryMsg = "Loading data is failed"
+    private fun handleRetry(e: Throwable) {
+        val retryMsg = e.message ?: "Loading data is failed"
         setState(HomeUiState.AutoRetry(retryMsg))
     }
 
     override fun onEvent(event: HomeUiEvent) {
         when (event) {
             HomeUiEvent.Retry -> {
-                fetchRates()
                 setState(HomeUiState.Loading)
+                fetchRates()
             }
             is HomeUiEvent.OnFavorite -> handleFavorite(event.rate)
         }

@@ -63,5 +63,5 @@ dependencies {
     moduleDependency(":ui:detail")
     moduleDependency(":ui:search")
     moduleDependency(":ui:common")
-//    testModuleDependency(":ui:common")
+    testImplementation(project(":ui:common"))
 }

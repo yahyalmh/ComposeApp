@@ -42,7 +42,8 @@ android {
 dependencies {
     compose()
     coroutines()
-    junit5()
+    implementation(Dependencies.JUNIT5_API)
+    implementation(Dependencies.MOCKITO_CORE)
 
     composeMaterial()
     moduleDependency(":data:common")

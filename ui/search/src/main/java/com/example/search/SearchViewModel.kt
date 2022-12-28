@@ -10,8 +10,8 @@ import com.example.common.model.ExchangeRate
 import com.example.favorite.FavoriteRatesInteractor
 import com.example.rate.ExchangeRateInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,7 +22,6 @@ class SearchViewModel @Inject constructor(
     private val favoriteRatesInteractor: FavoriteRatesInteractor,
 ) : BaseViewModel<SearchUiState, SearchUiEvent>(SearchUiState.Start()) {
     private val searchFlow = MutableStateFlow(state.value.query)
-    lateinit var searchJob: Job
 
     init {
         changeBottomBarVisibility(false)
@@ -35,16 +34,12 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    @OptIn(FlowPreview::class)
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     private fun observeQueryChange() {
         searchFlow
             .debounce(300)
             .distinctUntilChanged()
-            .onEach { query ->
-                if (::searchJob.isInitialized && searchJob.isActive) {
-                    searchJob.cancel()
-                }
-
+            .mapLatest { query ->
                 when {
                     query.isBlank() && query.isEmpty() -> setState(SearchUiState.Start())
                     query.isNotResetState() -> searchQuery(query)
@@ -54,33 +49,33 @@ class SearchViewModel @Inject constructor(
 
     private fun searchQuery(query: String) {
         setState(SearchUiState.Loading(query = state.value.query))
-        searchJob =
-            combine(
-                exchangeRateInteractor.getRates(),
-                favoriteRatesInteractor.getFavoriteRates()
-            ) { rates, favoriteRates ->
-                val result = rates.filter {
+        combine(
+            exchangeRateInteractor.getRates().map { rates ->
+                rates.filter {
                     it.symbol.contains(query, ignoreCase = true)
                 }
-                when {
-                    result.isEmpty() -> setState(SearchUiState.Empty(state.value.query))
-                    else -> setState(
-                        SearchUiState.Loaded(
-                            result = result,
-                            favoriteRates = favoriteRates,
-                            state.value.query
-                        )
+            },
+            favoriteRatesInteractor.getFavoriteRates()
+        ) { result, favoriteRates ->
+            when {
+                result.isEmpty() -> setState(SearchUiState.Empty(state.value.query))
+                else -> setState(
+                    SearchUiState.Loaded(
+                        result = result,
+                        favoriteRates = favoriteRates,
+                        state.value.query
                     )
-                }
+                )
             }
-                .retryWithPolicy { e -> handleRetry(e) }
-                .catch { e -> handleError(e) }
-                .launchIn(viewModelScope)
+        }
+            .retryWithPolicy { e -> handleRetry(e) }
+            .catch { e -> handleError(e) }
+            .launchIn(viewModelScope)
     }
 
     private fun handleError(e: Throwable) {
         searchFlow.value = restString
-        val errorMessage = e.message ?: "Error while fetching the exchange rate"
+        val errorMessage = e.message ?: "Error while searching rates"
         setState(SearchUiState.Retry(errorMessage, query = state.value.query))
     }
 

@@ -2,15 +2,15 @@ package com.example.detail
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.example.common.BaseViewModel
-import com.example.common.SharedState
-import com.example.common.UIEvent
-import com.example.common.UIState
-import com.example.common.model.ExchangeDetailRate
-import com.example.common.model.toExchangeRate
+import com.example.data.common.model.ExchangeDetailRate
+import com.example.data.common.model.toExchangeRate
 import com.example.detail.nav.DetailArgs
 import com.example.favorite.FavoriteRatesInteractor
 import com.example.rate.ExchangeRateInteractor
+import com.example.ui.common.BaseViewModel
+import com.example.ui.common.SharedState
+import com.example.ui.common.UIEvent
+import com.example.ui.common.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine

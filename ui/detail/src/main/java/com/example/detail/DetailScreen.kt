@@ -19,13 +19,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.common.ReferenceDevices
-import com.example.common.component.LoadingView
-import com.example.common.component.RetryView
-import com.example.common.component.bar.TopAppBar
-import com.example.common.component.icon.AppIcons
-import com.example.common.model.ExchangeDetailRate
+import com.example.data.common.model.ExchangeDetailRate
+import com.example.ui.common.ReferenceDevices
+import com.example.ui.common.component.bar.TopAppBar
+import com.example.ui.common.component.icon.AppIcons
+import com.example.ui.common.component.view.LoadingView
+import com.example.ui.common.component.view.RetryView
 import com.example.ui.detail.R
+import com.example.ui.common.R.string as commonString
 
 /**
  * @author yaya (@yahyalmh)
@@ -57,7 +58,7 @@ fun DetailScreen(
                 onActionClick = { viewModel.onEvent(DetailUiEvent.OnFavoriteClick(state.rateDetail)) },
                 actionIconContentDescription = stringResource(id = R.string.favoriteIcon),
                 navigationIcon = AppIcons.ArrowBack,
-                navigationIconContentDescription = "Back",
+                navigationIconContentDescription = stringResource(id =commonString.backIconContentDescription),
                 onNavigationClick = {
                     viewModel.onEvent(DetailUiEvent.NavigationBack)
                     navController.popBackStack()
@@ -70,7 +71,7 @@ fun DetailScreen(
 
         RetryView(
             isVisible = state.isError,
-            errorMessage = state.errorMsg,
+            retryMessage = state.errorMsg,
             icon = AppIcons.Warning
         ) { viewModel.onEvent(DetailUiEvent.Retry) }
 

@@ -1,4 +1,4 @@
-package com.example.common
+package com.example.ui.common
 
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview

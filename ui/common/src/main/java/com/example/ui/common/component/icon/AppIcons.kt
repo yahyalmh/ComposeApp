@@ -1,4 +1,4 @@
-package com.example.common.component.icon
+package com.example.ui.common.component.icon
 
 import androidx.annotation.DrawableRes
 import androidx.compose.material.icons.Icons

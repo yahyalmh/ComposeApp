@@ -1,4 +1,4 @@
-package com.example.common.component
+package com.example.ui.common.component.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -11,11 +11,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
-import com.example.common.BaseViewModel
-import com.example.common.UIEvent
-import com.example.common.UIState
-import com.example.common.component.bar.TopAppBar
-import com.example.common.component.icon.AppIcons
+import com.example.ui.common.BaseViewModel
+import com.example.ui.common.UIEvent
+import com.example.ui.common.UIState
+import com.example.ui.common.component.bar.TopAppBar
+import com.example.ui.common.component.icon.AppIcons
+import com.example.ui.common.component.view.AutoRetryView
+import com.example.ui.common.component.view.LoadingView
+import com.example.ui.common.component.view.RetryView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +66,7 @@ fun BaseScreen(
 
         RetryView(
             isVisible = uiState.isRetry,
-            errorMessage = uiState.retryMsg,
+            retryMessage = uiState.retryMsg,
             icon = AppIcons.Warning,
             onRetry = onRetry
         )

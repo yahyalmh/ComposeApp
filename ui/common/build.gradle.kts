@@ -40,11 +40,14 @@ android {
 }
 
 dependencies {
+    junit4()
+    junit5()
+    mockito()
     compose()
+    hiltTest()
     coroutines()
-    implementation(Dependencies.JUNIT5_API)
-    implementation(Dependencies.MOCKITO_CORE)
-
+    composeTest()
+    androidXTest()
     composeMaterial()
     moduleDependency(":data:common")
 }

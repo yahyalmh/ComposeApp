@@ -1,4 +1,4 @@
-package com.example.common.ext
+package com.example.ui.common.ext
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow

@@ -1,4 +1,4 @@
-package com.example.common.component.cell
+package com.example.ui.common.component.cell
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,12 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.common.component.icon.AppIcons
-import com.example.common.model.ExchangeRate
+import com.example.data.common.model.ExchangeRate
+import com.example.ui.common.R
+import com.example.ui.common.component.icon.AppIcons
 import java.util.*
 
 @Composable
@@ -32,6 +34,7 @@ fun RateCell(
     onLeadingIconClick: (rate: ExchangeRate) -> Unit
 ) {
     Card(modifier = modifier
+        .height(120.dp)
         .clickable { onClick() }
         .padding(8.dp),
         shape = RoundedCornerShape(12.dp))
@@ -55,8 +58,7 @@ private fun Content(
     Row(
         modifier = modifier
             .background(MaterialTheme.colorScheme.secondaryContainer)
-            .padding(8.dp)
-            .fillMaxWidth(),
+            .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
@@ -80,7 +82,7 @@ private fun Content(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
-                text = "Rate: ${rate.rateUsd.toString()}",
+                text = "Rate: ${rate.rateUsd}",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -97,7 +99,7 @@ private fun Content(
                         else it.toString()
                     }
                 }",
-                        style = MaterialTheme . typography . bodyMedium,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
@@ -110,7 +112,7 @@ private fun Content(
                         .size(24.dp)
                         .clickable { onLeadingIconClick(rate) },
                     imageVector = leadingIcon,
-                    contentDescription = "Leading Icon",
+                    contentDescription = stringResource(id = R.string.favoriteIconDescription),
                     tint = Color.Red
                 )
                 Spacer(modifier = Modifier.weight(1f))
@@ -119,7 +121,26 @@ private fun Content(
     }
 }
 
-@Preview(heightDp = 200, widthDp = 400)
+@Composable
+fun ExchangeRate.toCell(
+    favoritesRates: List<ExchangeRate>,
+    navigateToDetail: (id: String) -> Unit,
+    onFavoriteClick: (rate: ExchangeRate) -> Unit
+): @Composable () -> Unit = {
+    val leadingIcon = if (favoritesRates.any { it.id == this.id && it.symbol == this.symbol }) {
+        AppIcons.Favorite
+    } else {
+        AppIcons.FavoriteBorder
+    }
+    RateCell(
+        rate = this,
+        leadingIcon = leadingIcon,
+        onClick = { navigateToDetail(this.id) },
+        onLeadingIconClick = onFavoriteClick
+    )
+}
+
+@Preview
 @Composable
 fun RateCellPreview() {
     RateCell(

@@ -1,4 +1,4 @@
-package com.example.common.component
+package com.example.ui.common.component.view
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -12,14 +12,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.common.component.icon.AppIcons
 import com.example.ui.common.R
+import com.example.ui.common.component.icon.AppIcons
+import com.example.ui.common.test.TestTag
 
 @Composable
 fun EmptyView(
@@ -28,7 +30,11 @@ fun EmptyView(
     icon: ImageVector,
     message: String,
 ) {
-    ContentView(isVisible, modifier, icon) {
+    ContentView(
+        modifier = modifier,
+        isVisible = isVisible,
+        icon = icon
+    ) {
         Text(
             modifier = Modifier.padding(top = 10.dp),
             color = MaterialTheme.colorScheme.onBackground,
@@ -46,7 +52,11 @@ fun EmptyView(
     icon: ImageVector,
     message: AnnotatedString,
 ) {
-    ContentView(isVisible, modifier, icon) {
+    ContentView(
+        modifier = modifier,
+        isVisible = isVisible,
+        icon = icon
+    ) {
         Text(
             modifier = Modifier.padding(top = 10.dp),
             color = MaterialTheme.colorScheme.onBackground,
@@ -58,12 +68,13 @@ fun EmptyView(
 
 @Composable
 private fun ContentView(
-    isVisible: Boolean,
     modifier: Modifier,
+    isVisible: Boolean,
     icon: ImageVector,
     message: @Composable () -> Unit
 ) {
     AnimatedVisibility(
+        modifier = modifier.testTag(TestTag.EMPTY_VIEW),
         visible = isVisible,
         enter = fadeIn(),
         exit = fadeOut()

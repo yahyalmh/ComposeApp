@@ -1,6 +1,6 @@
 package com.example.rate.di
 
-import com.example.common.api.CoinCapRetrofit
+import com.example.data.common.api.CoinCapRetrofit
 import com.example.rate.api.ExchangeRateApi
 import com.example.rate.ExchangeRateInteractor
 import com.example.rate.ExchangeRateInteractorImpl

@@ -1,8 +1,8 @@
 package com.example.rate
 
-import com.example.common.ext.repeatFlow
-import com.example.common.model.ExchangeDetailRate
-import com.example.common.model.ExchangeRate
+import com.example.ui.common.ext.repeatFlow
+import com.example.data.common.model.ExchangeDetailRate
+import com.example.data.common.model.ExchangeRate
 import com.example.rate.model.toExternalModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

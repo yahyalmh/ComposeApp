@@ -1,6 +1,6 @@
 package com.example.rate.model
 
-import com.example.common.model.ExchangeDetailRate
+import com.example.data.common.model.ExchangeDetailRate
 import com.google.gson.annotations.SerializedName
 import java.math.BigDecimal
 

@@ -1,9 +1,9 @@
 package com.example.favorite;
 
-import com.example.common.database.ExchangeRateDao
-import com.example.common.database.ExchangeRateEntity
-import com.example.common.model.ExchangeRate
-import com.example.common.model.toEntity
+import com.example.data.common.database.ExchangeRateDao
+import com.example.data.common.database.ExchangeRateEntity
+import com.example.data.common.model.ExchangeRate
+import com.example.data.common.model.toEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

@@ -66,6 +66,7 @@ dependencies {
     retrofit()
 
     moduleDependency(":data:datastore")
+    moduleDependency(":data:common")
     moduleDependency(":ui:home")
     moduleDependency(":ui:main")
     moduleDependency(":ui:detail")

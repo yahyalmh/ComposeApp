@@ -11,11 +11,13 @@ object Version {
 
     const val ROOM_VERSION = "2.4.3"
 
-    const val ESPRESSO_CORE = "3.4.0"
+    const val ESPRESSO_CORE = "3.3.0"
 
     const val KOTLIN_COMPILER_EXTENSION_VERSION = "1.3.2"
 
     const val DATA_STORE = "1.0.0"
+
+    const val HILT = "2.44"
 
     object Retrofit {
         const val RETROFIT = "2.9.0"
@@ -45,11 +47,6 @@ object Version {
         const val NAVIGATION = "2.6.0-alpha03"
         const val HILT_NAVIGATION = "1.0.0"
         const val VIEWMODEL = "2.6.0-alpha03"
-    }
-
-    object Hilt {
-        const val HILT_ANDROID = "2.44"
-        const val HILT_COMPILER = "2.44"
     }
 
     object Junit {

@@ -40,8 +40,10 @@ object Dependencies {
         "androidx.constraintlayout:constraintlayout-compose:${Version.Compose.CONSTRAINTLAYOUT}"
 
 
-    const val HILT_ANDROID = "com.google.dagger:hilt-android:${Version.Hilt.HILT_ANDROID}"
-    const val HILT_COMPILER = "com.google.dagger:hilt-compiler:${Version.Hilt.HILT_COMPILER}"
+    const val HILT_ANDROID = "com.google.dagger:hilt-android:${Version.HILT}"
+    const val HILT_COMPILER = "com.google.dagger:hilt-compiler:${Version.HILT}"
+    const val HILT_TESTING = "com.google.dagger:hilt-android-testing:${Version.HILT}"
+    const val HILT_ANDROID_COMPILER = "com.google.dagger:hilt-android-compiler:${Version.HILT}"
 
     const val ANDROIDX_JUNIT = "androidx.test.ext:junit:${Version.Androidx.ANDROIDX_JUNIT}"
     const val ANDROIDX_TEST_CORE = "androidx.test:core:${Version.Androidx.ANDROIDX_TEST}"
@@ -122,6 +124,7 @@ fun DependencyHandler.composeMaterial() {
 fun DependencyHandler.composeTest() {
     androidTestImplementation(platform(Dependencies.COMPOSE_BOM))
     androidTestImplementation(Dependencies.COMPOSE_UI_TEST)
+    implementation(Dependencies.COMPOSE_UI_TEST)
     debugImplementation(Dependencies.COMPOSE_UI_TEST_MANIFEST)
 }
 
@@ -156,8 +159,23 @@ fun DependencyHandler.hilt() {
     kapt(Dependencies.HILT_COMPILER)
 }
 
+fun DependencyHandler.hiltTest() {
+    testImplementation(Dependencies.HILT_TESTING)
+    implementation(Dependencies.HILT_TESTING)
+    kaptTest(Dependencies.HILT_ANDROID_COMPILER)
+    androidTestImplementation(Dependencies.HILT_TESTING)
+    kaptAndroidTest(Dependencies.HILT_ANDROID_COMPILER)
+}
+
 fun DependencyHandler.datastore() {
     implementation(Dependencies.DATA_STORE)
+}
+
+fun DependencyHandler.androidXTest() {
+    androidTestImplementation(Dependencies.ANDROIDX_JUNIT)
+    androidTestImplementation(Dependencies.ANDROIDX_TEST_CORE)
+    androidTestImplementation(Dependencies.ANDROIDX_TEST_RUNNER)
+    implementation(Dependencies.ANDROIDX_TEST_RUNNER)
 }
 
 fun DependencyHandler.junit4() {
@@ -165,14 +183,9 @@ fun DependencyHandler.junit4() {
     testImplementation(Dependencies.JUNIT)
 }
 
-fun DependencyHandler.androidXTest() {
-    androidTestImplementation(Dependencies.ANDROIDX_JUNIT)
-    androidTestImplementation(Dependencies.ANDROIDX_TEST_CORE)
-    androidTestImplementation(Dependencies.ANDROIDX_TEST_RUNNER)
-}
-
 fun DependencyHandler.junit5() {
     testImplementation(Dependencies.JUNIT5_API)
+    implementation(Dependencies.JUNIT5_API)
     testImplementation(Dependencies.JUNIT5_PARAMS)
     testImplementation(Dependencies.JUNIT5_VINTAGE)
     testRuntimeOnly(Dependencies.JUNIT5_ENGINE)
@@ -180,6 +193,7 @@ fun DependencyHandler.junit5() {
 
 fun DependencyHandler.mockito() {
     testImplementation(Dependencies.MOCKITO_CORE)
+    implementation(Dependencies.MOCKITO_CORE)
     testImplementation(Dependencies.MOCKITO_JUNIT)
     testImplementation(Dependencies.MOCKITO_INLINE)
     testImplementation(Dependencies.MOCKITO_KOTLIN)
@@ -194,6 +208,8 @@ fun DependencyHandler.espresso() = androidTestImplementation(Dependencies.ANDROI
 fun DependencyHandler.lifecycle() = implementation(Dependencies.ANDROID_LIFECYCLE_RUNTIME)
 
 private fun DependencyHandler.kapt(depName: String) = add("kapt", depName)
+private fun DependencyHandler.kaptTest(depName: String) = add("kaptTest", depName)
+private fun DependencyHandler.kaptAndroidTest(depName: String) = add("kaptAndroidTest", depName)
 
 fun DependencyHandler.implementation(depName: String) = add("implementation", depName)
 fun DependencyHandler.implementation(dependency: Dependency) = add("implementation", dependency)

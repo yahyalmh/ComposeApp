@@ -14,3 +14,6 @@ This is a sample modularized android application with clean architecture and com
 
 ## To Do
 - Writing unit tests
+- Pagination
+- Search history
+- Show increase or decrease of rates

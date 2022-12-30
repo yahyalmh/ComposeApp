@@ -2,59 +2,56 @@ package com.example.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.common.ReferenceDevices
-import com.example.common.component.AutoRetryView
-import com.example.common.component.BaseLazyColumn
-import com.example.common.component.LoadingView
-import com.example.common.component.RetryView
-import com.example.common.component.bar.TopAppBar
-import com.example.common.component.cell.RateCell
-import com.example.common.component.icon.AppIcons
-import com.example.common.model.ExchangeRate
+import com.example.ui.common.ReferenceDevices
+import com.example.ui.common.component.BaseLazyColumn
+import com.example.ui.common.component.cell.toCell
+import com.example.ui.common.component.icon.AppIcons
+import com.example.ui.common.component.screen.TopBarScaffold
+import com.example.ui.common.component.view.AutoRetryView
+import com.example.ui.common.component.view.LoadingView
+import com.example.ui.common.component.view.RetryView
+import com.example.data.common.model.ExchangeRate
 import com.example.detail.nav.navigateToDetail
 import com.example.search.nav.navigateToSearch
 import com.example.ui.home.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.surface,
-        topBar = {
-            TopAppBar(
-                title = stringResource(id = R.string.home),
-                modifier = Modifier
-                    .zIndex(1F)
-                    .shadow(
-                        elevation = 5.dp,
-                        spotColor = MaterialTheme.colorScheme.onBackground
-                    ),
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                ),
-                navigationIcon = AppIcons.Menu,
-                navigationIconContentDescription = stringResource(id = R.string.menu),
-                actionIcon = AppIcons.Search,
-                actionIconContentDescription = stringResource(id = R.string.searchIcon),
-                onActionClick = { navController.navigateToSearch() }
-            )
-        }
+    HomeScreenContent(
+        modifier = modifier,
+        navController = navController,
+        uiState = viewModel.state.value,
+        onRetry = { viewModel.onEvent(HomeUiEvent.Retry) },
+        onFavoriteClick = { rate -> viewModel.onEvent(HomeUiEvent.OnFavorite(rate)) }
+    )
+}
+
+@Composable
+fun HomeScreenContent(
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    uiState: HomeUiState,
+    onRetry: () -> Unit = {},
+    onFavoriteClick: (rate: ExchangeRate) -> Unit = {},
+) {
+    TopBarScaffold(
+        title = stringResource(id = R.string.home),
+        navigationIcon = AppIcons.Menu,
+        navigationIconContentDescription = stringResource(id = R.string.menu),
+        actionIcon = AppIcons.Search,
+        actionIconContentDescription = stringResource(id = R.string.searchIconContentDescription),
+        onActionClick = { navController.navigateToSearch() }
     ) { padding ->
-        val uiState = viewModel.state.value
 
         LoadingView(
             modifier = Modifier.padding(padding),
@@ -63,11 +60,10 @@ fun HomeScreen(
 
         RetryView(
             isVisible = uiState.isRetry,
-            errorMessage = uiState.retryMsg,
-            icon = AppIcons.Warning
-        ) {
-            viewModel.onEvent(HomeUiEvent.Retry)
-        }
+            retryMessage = uiState.retryMsg,
+            icon = AppIcons.Warning,
+            onRetry = onRetry
+        )
 
         AutoRetryView(
             isVisible = uiState.isAutoRetry,
@@ -75,18 +71,19 @@ fun HomeScreen(
             icon = AppIcons.Warning,
         )
 
-        ContentView(
+        DataView(
             isVisible = uiState.isLoaded,
             modifier = modifier.padding(padding),
             rates = uiState.rates,
             favoritesRates = uiState.favoriteRates,
-            navigateToDetail = { rateId -> navController.navigateToDetail(rateId) }
-        ) { rate -> viewModel.onEvent(HomeUiEvent.OnFavorite(rate)) }
+            navigateToDetail = { rateId -> navController.navigateToDetail(rateId) },
+            onFavoriteClick = onFavoriteClick
+        )
     }
 }
 
 @Composable
-private fun ContentView(
+private fun DataView(
     modifier: Modifier,
     isVisible: Boolean,
     rates: List<ExchangeRate>,
@@ -94,28 +91,23 @@ private fun ContentView(
     navigateToDetail: (id: String) -> Unit,
     onFavoriteClick: (rate: ExchangeRate) -> Unit
 ) {
-    BaseLazyColumn(
-        isVisible = isVisible,
-        items = rates,
-        modifier = modifier.background(MaterialTheme.colorScheme.surface)
-    ) { rate ->
-        val leadingIcon = if (favoritesRates.any { it.id == rate.id && it.symbol == rate.symbol }) {
-            AppIcons.Favorite
-        } else {
-            AppIcons.FavoriteBorder
-        }
-        RateCell(
-            rate = rate,
-            leadingIcon = leadingIcon,
-            onClick = { navigateToDetail(rate.id) },
-            onLeadingIconClick = onFavoriteClick
+    val models = rates.map {
+        it.toCell(
+            favoritesRates = favoritesRates,
+            navigateToDetail = navigateToDetail,
+            onFavoriteClick = onFavoriteClick
         )
     }
+    BaseLazyColumn(
+        modifier = modifier.background(MaterialTheme.colorScheme.surface),
+        isVisible = isVisible,
+        models = models
+    )
 }
 
 @Composable
 @ReferenceDevices
-fun ContentPreview() = ContentView(
+fun DataPreview() = DataView(
     modifier = Modifier,
     rates = ratesStub(),
     favoritesRates = ratesStub(10),

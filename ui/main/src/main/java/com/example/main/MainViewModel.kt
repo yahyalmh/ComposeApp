@@ -4,12 +4,16 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.navOptions
-import com.example.common.*
+import com.example.ui.common.component.bar.BottomBarTab
 import com.example.datastore.DatastoreInteractor
+import com.example.favorite.nav.favoriteRoute
 import com.example.favorite.nav.navigateToFavorite
+import com.example.home.nav.homeRoute
 import com.example.home.nav.navigateToHome
 import com.example.main.connectivity.ConnectivityMonitor
 import com.example.setting.nav.navigateToSetting
+import com.example.setting.nav.settingRoute
+import com.example.ui.common.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -26,7 +30,6 @@ class MainViewModel @Inject constructor(
     MainUiState.HideNetStatusView()
 ) {
     private var isAppLaunchedForFirstTime: Boolean = true
-    val bottomBarTabs: List<BottomBarTab> = BottomBarTab.values().asList()
 
     init {
         observeAppTheme()
@@ -115,10 +118,10 @@ class MainViewModel @Inject constructor(
 //            restoreState = true
         }
 
-        when (destination) {
-            BottomBarTab.Home -> navController.navigateToHome(navOptions)
-            BottomBarTab.FAVORITE -> navController.navigateToFavorite(navOptions)
-            BottomBarTab.SETTING -> navController.navigateToSetting(navOptions)
+        when (destination.route) {
+            homeRoute -> navController.navigateToHome(navOptions)
+            favoriteRoute -> navController.navigateToFavorite(navOptions)
+            settingRoute -> navController.navigateToSetting(navOptions)
         }
     }
 }

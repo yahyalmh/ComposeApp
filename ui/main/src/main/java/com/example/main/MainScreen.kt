@@ -5,19 +5,32 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.common.ThemeType
 import com.example.compose.nav.AppNavHost
+import com.example.favorite.nav.favoriteRoute
+import com.example.home.nav.homeRoute
 import com.example.main.theme.AppTheme
+import com.example.setting.nav.settingRoute
+import com.example.ui.common.ThemeType
+import com.example.ui.common.component.bar.BottomAppBar
+import com.example.ui.common.component.bar.BottomBarTab
+import com.example.ui.common.component.bar.ConnectivityStatusView
+import com.example.ui.main.R
 
 /**
  * @author yaya (@yahyalmh)
@@ -37,7 +50,7 @@ fun MainScreen(
             modifier = modifier,
             uiState = uiState,
             navController = navController,
-            bottomBarTabs = viewModel.bottomBarTabs
+            bottomBarTabs = bottomBarTabs()
         ) { tab ->
             viewModel.onEvent(MainUiEvent.ChangeTab(navController, tab))
         }
@@ -53,7 +66,11 @@ private fun ContentView(
     onNavigateToDestination: (BottomBarTab) -> Unit
 ) {
     Column {
-        NetStatusView(uiState.isOnlineViewVisible, uiState.isOfflineViewVisible)
+        ConnectivityStatusView(
+            modifier = modifier,
+            isOnlineViewVisible = uiState.isOnlineViewVisible,
+            isOfflineViewVisible = uiState.isOfflineViewVisible
+        )
 
         Scaffold(
             modifier = modifier.fillMaxSize(),
@@ -61,10 +78,10 @@ private fun ContentView(
             bottomBar = {
                 AnimatedVisibility(visible = uiState.isBottomBarVisible) {
                     BottomAppBar(
-                        destinations = bottomBarTabs,
+                        modifier = Modifier.testTag(TestTag.BOTTOM_BAR),
+                        tabs = bottomBarTabs,
                         onNavigateToDestination = onNavigateToDestination,
-                        currentDestination = navController.currentBackStackEntryAsState().value?.destination,
-                        modifier = Modifier.testTag("AppBottomBar")
+                        currentDestination = navController.currentBackStackEntryAsState().value?.destination
                     )
                 }
             }
@@ -73,6 +90,33 @@ private fun ContentView(
         }
     }
 }
+
+@Composable
+fun bottomBarTabs() = listOf(
+    BottomBarTab(
+        title = stringResource(id = R.string.home),
+        route = homeRoute,
+        selectedIcon = Icons.Default.Home,
+        unselectedIcon = Icons.Default.Home,
+        contentDescription = stringResource(id = R.string.homeTabContentDescription)
+    ),
+
+    BottomBarTab(
+        title = stringResource(id = R.string.favorite),
+        route = favoriteRoute,
+        selectedIcon = Icons.Default.Favorite,
+        unselectedIcon = Icons.Default.FavoriteBorder,
+        contentDescription = stringResource(id = R.string.favoriteTabContentDescription)
+    ),
+
+    BottomBarTab(
+        title = stringResource(id = R.string.setting),
+        route = settingRoute,
+        selectedIcon = Icons.Default.Settings,
+        unselectedIcon = Icons.Default.Settings,
+        contentDescription = stringResource(id = R.string.settingTabContentDescription)
+    )
+)
 
 @Composable
 @OptIn(ExperimentalLayoutApi::class)
@@ -98,12 +142,16 @@ fun shouldUseDarkTheme(themeType: ThemeType?): Boolean =
     }
 
 @Composable
-@Preview(showSystemUi = false, name = "OfflinePreview", device = Devices.PHONE)
+@Preview(
+    showSystemUi = false,
+    name = "OfflinePreview",
+    device = Devices.PHONE
+)
 fun OfflineContentPreview() {
     val navController = rememberNavController()
     ContentView(
         uiState = MainUiState.Offline(),
-        bottomBarTabs = BottomBarTab.values().asList(),
+        bottomBarTabs = bottomBarTabs(),
         navController = navController,
         onNavigateToDestination = {}
     )
@@ -120,7 +168,7 @@ fun OnlineContentPreview() {
     val navController = rememberNavController()
     ContentView(
         uiState = MainUiState.Online(),
-        bottomBarTabs = BottomBarTab.values().asList(),
+        bottomBarTabs = bottomBarTabs(),
         navController = navController,
         onNavigateToDestination = {}
     )

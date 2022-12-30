@@ -1,11 +1,11 @@
 package com.example.home
 
 import androidx.lifecycle.viewModelScope
-import com.example.common.BaseViewModel
-import com.example.common.UIEvent
-import com.example.common.UIState
-import com.example.common.ext.retryWithPolicy
-import com.example.common.model.ExchangeRate
+import com.example.ui.common.BaseViewModel
+import com.example.ui.common.UIEvent
+import com.example.ui.common.UIState
+import com.example.ui.common.ext.retryWithPolicy
+import com.example.data.common.model.ExchangeRate
 import com.example.favorite.FavoriteRatesInteractor
 import com.example.home.util.Constant
 import com.example.rate.ExchangeRateInteractor
@@ -23,7 +23,7 @@ import javax.inject.Inject
  */
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+open class HomeViewModel @Inject constructor(
     private val exchangeRateInteractor: ExchangeRateInteractor,
     private val favoriteRatesInteractor: FavoriteRatesInteractor
 ) : BaseViewModel<HomeUiState, HomeUiEvent>(HomeUiState.Loading) {
@@ -39,8 +39,8 @@ class HomeViewModel @Inject constructor(
         ) { rates, favoriteRates ->
             setState(HomeUiState.Loaded(rates = rates, favoriteRates = favoriteRates))
         }
-            .retryWithPolicy { e -> handleRetry(e) }
-            .catch { e -> handleError(e) }
+            .retryWithPolicy { e -> handleAutoRetry(e) }
+            .catch { e -> handleRetry(e) }
             .launchIn(viewModelScope)
     }
 
@@ -59,17 +59,8 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun handleError(e: Throwable) {
-        println(e.printStackTrace())
-        val errorMessage = e.message ?: "Error while fetching the exchange rates"
-        setState(HomeUiState.Retry(retryMsg = errorMessage))
-    }
-
-    private fun handleRetry(e: Throwable) {
-        val retryMsg = e.message ?: "Loading data is failed"
-        setState(HomeUiState.AutoRetry(retryMsg))
-    }
-
+    private fun handleRetry(e: Throwable) = setState(HomeUiState.Retry(retryMsg = e.message))
+    private fun handleAutoRetry(e: Throwable) = setState(HomeUiState.AutoRetry(e.message))
     override fun onEvent(event: HomeUiEvent) {
         when (event) {
             HomeUiEvent.Retry -> {
@@ -86,16 +77,16 @@ sealed class HomeUiState(
     val favoriteRates: List<ExchangeRate> = emptyList(),
     val isLoading: Boolean = false,
     val isRetry: Boolean = false,
-    val retryMsg: String = "",
+    val retryMsg: String? = null,
     val isAutoRetry: Boolean = false,
-    val autoRetryMsg: String = "",
+    val autoRetryMsg: String? = null,
     val isLoaded: Boolean = false
 ) : UIState {
     object Loading : HomeUiState(isLoading = true)
 
-    class Retry(retryMsg: String) : HomeUiState(isRetry = true, retryMsg = retryMsg)
+    class Retry(retryMsg: String? = null) : HomeUiState(isRetry = true, retryMsg = retryMsg)
 
-    class AutoRetry(autoRetryMsg: String) :
+    class AutoRetry(autoRetryMsg: String? = null) :
         HomeUiState(isAutoRetry = true, autoRetryMsg = autoRetryMsg)
 
     class Loaded(rates: List<ExchangeRate>, favoriteRates: List<ExchangeRate>) :

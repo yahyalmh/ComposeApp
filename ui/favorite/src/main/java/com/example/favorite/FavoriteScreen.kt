@@ -9,12 +9,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.common.component.cell.RateCell
-import com.example.common.component.*
-import com.example.common.component.bar.TopAppBar
-import com.example.common.component.icon.AppIcons
-import com.example.common.model.ExchangeRate
+import com.example.ui.common.component.*
+import com.example.ui.common.component.bar.TopAppBar
+import com.example.ui.common.component.cell.RateCell
+import com.example.ui.common.component.icon.AppIcons
+import com.example.ui.common.component.view.AutoRetryView
+import com.example.ui.common.component.view.EmptyView
+import com.example.ui.common.component.view.LoadingView
+import com.example.ui.common.component.view.RetryView
+import com.example.data.common.model.ExchangeRate
 import com.example.detail.nav.navigateToDetail
+import com.example.ui.common.component.BaseLazyColumn
 import com.example.ui.favorite.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,7 +51,7 @@ fun FavoriteScreen(
 
         RetryView(
             isVisible = uiState.isRetry,
-            errorMessage = uiState.retryMsg,
+            retryMessage = uiState.retryMsg,
             icon = AppIcons.Warning
         ) {
             viewModel.onEvent(FavoriteUiEvent.Retry)

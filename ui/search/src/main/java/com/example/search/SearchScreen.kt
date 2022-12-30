@@ -19,12 +19,17 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.common.component.*
-import com.example.common.component.bar.SearchBar
-import com.example.common.component.cell.RateCell
-import com.example.common.component.icon.AppIcons
-import com.example.common.model.ExchangeRate
+import com.example.ui.common.component.*
+import com.example.ui.common.component.bar.SearchBar
+import com.example.ui.common.component.cell.RateCell
+import com.example.ui.common.component.icon.AppIcons
+import com.example.ui.common.component.view.AutoRetryView
+import com.example.ui.common.component.view.EmptyView
+import com.example.ui.common.component.view.LoadingView
+import com.example.ui.common.component.view.RetryView
+import com.example.data.common.model.ExchangeRate
 import com.example.detail.nav.navigateToDetail
+import com.example.ui.common.component.BaseLazyColumn
 import com.example.ui.search.R
 
 @Composable
@@ -47,7 +52,7 @@ fun SearchScreen(
 
     RetryView(
         isVisible = uiState.isRetry,
-        errorMessage = uiState.retryMsg,
+        retryMessage = uiState.retryMsg,
         icon = AppIcons.Warning
     ) { viewModel.onEvent(SearchUiEvent.Retry) }
 
@@ -63,6 +68,7 @@ fun SearchScreen(
     Column(modifier = modifier.background(MaterialTheme.colorScheme.surface)) {
         SearchBar(
             modifier = modifier.background(MaterialTheme.colorScheme.surface),
+            hint = stringResource(id = R.string.searchBarHint),
             onQueryChange = { query -> viewModel.onEvent(SearchUiEvent.QueryChange(query)) },
             onCancelClick = {
                 viewModel.onEvent(SearchUiEvent.NavigationBack)

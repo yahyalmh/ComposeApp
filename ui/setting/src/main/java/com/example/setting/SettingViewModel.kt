@@ -1,8 +1,8 @@
 package com.example.setting
 
 import androidx.lifecycle.viewModelScope
-import com.example.common.*
 import com.example.datastore.DatastoreInteractor
+import com.example.ui.common.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

@@ -1,9 +1,9 @@
 package com.example.home
 
-import com.example.common.model.ExchangeRate
-import com.example.common.test.MainDispatcherRule
-import com.example.common.test.thenEmitError
-import com.example.common.test.thenEmitNothing
+import com.example.data.common.model.ExchangeRate
+import com.example.ui.common.test.MainDispatcherRule
+import com.example.ui.common.test.thenEmitError
+import com.example.ui.common.test.thenEmitNothing
 import com.example.favorite.FavoriteRatesInteractorImpl
 import com.example.home.util.Constant
 import com.example.rate.ExchangeRateInteractorImpl

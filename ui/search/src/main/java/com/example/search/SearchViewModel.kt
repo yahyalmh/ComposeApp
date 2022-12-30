@@ -1,12 +1,12 @@
 package com.example.search
 
 import androidx.lifecycle.viewModelScope
-import com.example.common.BaseViewModel
-import com.example.common.SharedState
-import com.example.common.UIEvent
-import com.example.common.UIState
-import com.example.common.ext.retryWithPolicy
-import com.example.common.model.ExchangeRate
+import com.example.ui.common.BaseViewModel
+import com.example.ui.common.SharedState
+import com.example.ui.common.UIEvent
+import com.example.ui.common.UIState
+import com.example.ui.common.ext.retryWithPolicy
+import com.example.data.common.model.ExchangeRate
 import com.example.favorite.FavoriteRatesInteractor
 import com.example.rate.ExchangeRateInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel

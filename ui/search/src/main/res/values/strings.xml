@@ -3,4 +3,5 @@
     <string name="noItemFound">No item found for </string>
     <string name="startSearchHint">Search and mark currencies you like</string>
     <string name="searchAutoRetryHint">Go online to search again</string>
+    <string name="searchBarHint">Search Currencies</string>
 </resources>

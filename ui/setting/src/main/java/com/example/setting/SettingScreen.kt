@@ -14,9 +14,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.common.ThemeType
-import com.example.common.component.LoadingView
-import com.example.common.component.bar.TopAppBar
+import com.example.ui.common.ThemeType
+import com.example.ui.common.component.bar.TopAppBar
+import com.example.ui.common.component.view.LoadingView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

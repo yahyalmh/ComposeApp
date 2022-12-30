@@ -1,4 +1,4 @@
-package com.example.common.component.bar
+package com.example.ui.common.component.bar
 
 import android.content.res.Configuration.UI_MODE_NIGHT_MASK
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -30,12 +30,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.example.common.component.icon.AppIcons
+import com.example.ui.common.component.icon.AppIcons
 import com.example.ui.common.R
 
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
+    hint: String,
     onQueryChange: (query: String) -> Unit,
     onCancelClick: () -> Unit
 ) {
@@ -105,7 +106,7 @@ fun SearchBar(
                             exit = fadeOut()
                         ) {
                             Text(
-                                text = "Search Currencies",
+                                text = hint,
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSecondary,
                             )
@@ -141,7 +142,8 @@ fun SearchBar(
         ) {
             Text(
                 color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.bodyLarge, text = "Cancel"
+                style = MaterialTheme.typography.bodyLarge,
+                text = stringResource(id = R.string.cancel)
             )
         }
     }
@@ -151,11 +153,11 @@ fun SearchBar(
 @Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun SearchPreviewDark() {
-    SearchBar(onQueryChange = {}) {}
+    SearchBar(hint = "Search", onQueryChange = {}) {}
 }
 
 @Preview(showBackground = true, showSystemUi = false, uiMode = UI_MODE_NIGHT_MASK)
 @Composable
 fun SearchPreviewLight() {
-    SearchBar(onQueryChange = {}) {}
+    SearchBar(hint = "Search", onQueryChange = {}) {}
 }

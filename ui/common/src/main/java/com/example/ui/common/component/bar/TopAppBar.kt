@@ -1,4 +1,4 @@
-package com.example.common.component.bar
+package com.example.ui.common.component.bar
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu

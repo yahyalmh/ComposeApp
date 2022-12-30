@@ -3,6 +3,7 @@ package com.example.data.common.database.di
 import android.content.Context
 import androidx.room.Room
 import com.example.data.common.database.AppDatabase
+import com.example.data.common.database.DbConfig.DATABASE_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,7 +27,4 @@ class DatabaseModule {
         DATABASE_NAME
     ).build()
 
-    companion object {
-        const val DATABASE_NAME = "app_database"
-    }
 }

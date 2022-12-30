@@ -1,4 +1,4 @@
-package com.example.common.api
+package com.example.data.common.api
 
 import retrofit2.Retrofit
 

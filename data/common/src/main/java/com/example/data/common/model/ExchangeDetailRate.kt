@@ -1,4 +1,4 @@
-package com.example.common.model
+package com.example.data.common.model
 
 import java.math.BigDecimal
 

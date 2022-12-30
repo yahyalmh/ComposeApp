@@ -1,6 +1,6 @@
-package com.example.common.model
+package com.example.data.common.model
 
-import com.example.common.database.ExchangeRateEntity
+import com.example.data.common.database.ExchangeRateEntity
 import java.math.BigDecimal
 
 /**

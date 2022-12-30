@@ -1,8 +1,8 @@
-package com.example.common.database.di
+package com.example.data.common.database.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.common.database.AppDatabase
+import com.example.data.common.database.AppDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

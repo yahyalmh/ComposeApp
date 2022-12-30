@@ -1,8 +1,8 @@
-package com.example.common.api.di
+package com.example.data.common.api.di
 
 import com.example.data.common.BuildConfig
-import com.example.common.api.CoinCapRetrofit
-import com.example.common.api.RetrofitBuilder
+import com.example.data.common.api.CoinCapRetrofit
+import com.example.data.common.api.RetrofitBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Binds
 import dagger.Module

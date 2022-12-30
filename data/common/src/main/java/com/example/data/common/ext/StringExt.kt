@@ -1,4 +1,4 @@
-package com.example.common.ext
+package com.example.data.common.ext
 
 object RandomString {
     fun next(length: Int = 10, withNumbers: Boolean = true): String {

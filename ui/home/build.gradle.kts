@@ -14,7 +14,7 @@ android {
         minSdk = AppConfig.minSdk
         targetSdk = AppConfig.targetSdk
 
-        testInstrumentationRunner = AppConfig.androidTestInstrumentation
+        testInstrumentationRunner = AppConfig.appCustomTestRunner
     }
 
     buildTypes {
@@ -50,12 +50,15 @@ dependencies {
     coroutines()
 
     junit5()
+    junit4()
     androidXTest()
     espresso()
     mockito()
+    composeTest()
 
     composeConstraintLayout()
     hilt()
+    hiltTest()
 
     moduleDependency(":data:exchangerate")
     moduleDependency(":data:common")

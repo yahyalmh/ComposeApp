@@ -1,6 +1,6 @@
 package com.example.rate
 
-import com.example.common.ext.RandomString
+import com.example.data.common.ext.RandomString
 import com.example.rate.model.ExchangeRateDetailModel
 import com.example.rate.model.ExchangeRateModel
 import com.example.rate.model.ExchangeRatesModel

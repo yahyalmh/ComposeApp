@@ -1,4 +1,4 @@
-package com.example.main.connectivity
+package com.example.ui.common.connectivity
 
 import android.content.Context
 import android.net.ConnectivityManager

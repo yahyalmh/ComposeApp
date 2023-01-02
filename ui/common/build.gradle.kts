@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("de.mannodermaus.android-junit5")
+    id("com.google.dagger.hilt.android")
 }
 android {
     namespace = "com.example.ui.common"
@@ -45,6 +46,7 @@ dependencies {
     mockito()
     compose()
     hiltTest()
+    hilt()
     coroutines()
     composeTest()
     androidXTest()

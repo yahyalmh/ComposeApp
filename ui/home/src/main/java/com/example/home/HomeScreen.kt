@@ -6,19 +6,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.data.common.model.ExchangeRate
+import com.example.detail.nav.navigateToDetail
+import com.example.search.nav.navigateToSearch
 import com.example.ui.common.ReferenceDevices
 import com.example.ui.common.component.BaseLazyColumn
+import com.example.ui.common.component.cell.RateShimmerCell
 import com.example.ui.common.component.cell.toCell
 import com.example.ui.common.component.icon.AppIcons
 import com.example.ui.common.component.screen.TopBarScaffold
 import com.example.ui.common.component.view.AutoRetryView
-import com.example.ui.common.component.view.LoadingView
 import com.example.ui.common.component.view.RetryView
-import com.example.data.common.model.ExchangeRate
-import com.example.detail.nav.navigateToDetail
-import com.example.search.nav.navigateToSearch
+import com.example.ui.common.component.view.ShimmerView
+import com.example.ui.common.ext.create
 import com.example.ui.home.R
 
 @Composable
@@ -53,8 +56,8 @@ fun HomeScreenContent(
         onActionClick = { navController.navigateToSearch() }
     ) { padding ->
 
-        LoadingView(
-            modifier = Modifier.padding(padding),
+        HomeShimmerView(
+            modifier = modifier.padding(padding),
             isVisible = uiState.isLoading
         )
 
@@ -83,6 +86,22 @@ fun HomeScreenContent(
 }
 
 @Composable
+private fun HomeShimmerView(
+    modifier: Modifier = Modifier,
+    isVisible: Boolean,
+) {
+    ShimmerView(
+        modifier = modifier,
+        isVisible = isVisible,
+    ) { shimmerAxis ->
+        BaseLazyColumn(
+            isVisible = true,
+            models = create(count = 6) { { RateShimmerCell(shimmerAxis = shimmerAxis) } }
+        )
+    }
+}
+
+@Composable
 private fun DataView(
     modifier: Modifier,
     isVisible: Boolean,
@@ -105,24 +124,23 @@ private fun DataView(
     )
 }
 
+
+@Composable
+@Preview
+fun HomeShimmerPreview() {
+    HomeShimmerView(isVisible = true)
+}
+
 @Composable
 @ReferenceDevices
 fun DataPreview() = DataView(
     modifier = Modifier,
-    rates = ratesStub(),
-    favoritesRates = ratesStub(10),
+    rates = create(20) { rateStub() },
+    favoritesRates = create(10) { rateStub() },
     isVisible = true,
     navigateToDetail = {}
 ) {}
 
-@Composable
-private fun ratesStub(count: Int = 20): MutableList<ExchangeRate> {
-    val rates = mutableListOf<ExchangeRate>()
-    repeat(count) { rates.add(rateStub()) }
-    return rates
-}
-
-@Composable
 internal fun rateStub(): ExchangeRate = ExchangeRate(
     id = "1",
     symbol = "$",

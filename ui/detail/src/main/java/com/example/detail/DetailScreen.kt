@@ -25,6 +25,7 @@ import com.example.ui.common.component.view.ShimmerGradient
 import com.example.ui.common.component.view.ShimmerView
 import com.example.ui.common.component.view.shimmerBackground
 import com.example.ui.detail.R
+import com.example.ui.common.R.string as commonString
 
 /**
  * @author yaya (@yahyalmh)
@@ -67,6 +68,8 @@ private fun DetailScreenContent(
         actionIconContentDescription = stringResource(id = R.string.favoriteIcon),
         onActionClick = { onFavoriteClick(uiState.rateDetail) },
         actionIconColor = Color.Red,
+        navigationIcon = AppIcons.ArrowBack,
+        navigationIconContentDescription = stringResource(id = commonString.backIconContentDescription),
         onNavigationClick = { onBackClick() }
     ) { padding ->
 

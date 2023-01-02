@@ -8,6 +8,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -23,6 +24,7 @@ fun TopBarScaffold(
     onNavigationClick: () -> Unit = {},
     actionIcon: ImageVector? = null,
     actionIconContentDescription: String? = null,
+    actionIconColor: Color = MaterialTheme.colorScheme.onSurface,
     onActionClick: () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
@@ -45,6 +47,7 @@ fun TopBarScaffold(
                 navigationIconContentDescription = navigationIconContentDescription,
                 actionIcon = actionIcon,
                 actionIconContentDescription = actionIconContentDescription,
+                actionIconColor = actionIconColor,
                 onActionClick = onActionClick,
             )
         },

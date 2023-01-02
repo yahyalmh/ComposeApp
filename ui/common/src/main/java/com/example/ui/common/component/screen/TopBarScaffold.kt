@@ -10,8 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.example.ui.common.R
 import com.example.ui.common.component.bar.TopAppBar
 import com.example.ui.common.component.icon.AppIcons
 
@@ -20,7 +22,7 @@ import com.example.ui.common.component.icon.AppIcons
 fun TopBarScaffold(
     title: String,
     navigationIcon: ImageVector? = AppIcons.ArrowBack,
-    navigationIconContentDescription: String? = "Back Icon",
+    navigationIconContentDescription: String? = stringResource(id = R.string.backIconContentDescription),
     onNavigationClick: () -> Unit = {},
     actionIcon: ImageVector? = null,
     actionIconContentDescription: String? = null,

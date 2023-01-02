@@ -3,11 +3,8 @@ package com.example.detail
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,75 +13,83 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.data.common.model.ExchangeDetailRate
-import com.example.ui.common.ReferenceDevices
-import com.example.ui.common.component.bar.TopAppBar
 import com.example.ui.common.component.icon.AppIcons
-import com.example.ui.common.component.view.LoadingView
+import com.example.ui.common.component.screen.TopBarScaffold
 import com.example.ui.common.component.view.RetryView
+import com.example.ui.common.component.view.ShimmerGradient
+import com.example.ui.common.component.view.ShimmerView
+import com.example.ui.common.component.view.shimmerBackground
 import com.example.ui.detail.R
-import com.example.ui.common.R.string as commonString
 
 /**
  * @author yaya (@yahyalmh)
  * @since 10th November 2022
  */
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
     viewModel: DetailViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state.value
-    Scaffold(
-        contentColor = MaterialTheme.colorScheme.surface,
-        topBar = {
-            TopAppBar(
-                title = stringResource(id = R.string.detail),
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                ),
-                actionIcon = if (state.isFavorite) {
-                    AppIcons.Favorite
-                } else {
-                    AppIcons.FavoriteBorder
-                },
-                actionIconColor = Color.Red,
-                onActionClick = { viewModel.onEvent(DetailUiEvent.OnFavoriteClick(state.rateDetail)) },
-                actionIconContentDescription = stringResource(id = R.string.favoriteIcon),
-                navigationIcon = AppIcons.ArrowBack,
-                navigationIconContentDescription = stringResource(id =commonString.backIconContentDescription),
-                onNavigationClick = {
-                    viewModel.onEvent(DetailUiEvent.NavigationBack)
-                    navController.popBackStack()
-                }
-            )
-        }
+    DetailScreenContent(
+        modifier = modifier,
+        uiState = viewModel.state.value,
+        onFavoriteClick = { rateDetail -> viewModel.onEvent(DetailUiEvent.OnFavoriteClick(rateDetail)) },
+        onBackClick = {
+            viewModel.onEvent(DetailUiEvent.NavigationBack)
+            navController.popBackStack()
+        },
+        onRetry = { viewModel.onEvent(DetailUiEvent.Retry) }
+    )
+}
+
+@Composable
+private fun DetailScreenContent(
+    modifier: Modifier,
+    uiState: DetailUiState,
+    onFavoriteClick: (rate: ExchangeDetailRate?) -> Unit,
+    onBackClick: () -> Unit,
+    onRetry: () -> Unit,
+) {
+    TopBarScaffold(
+        title = stringResource(id = R.string.detail),
+        actionIcon = if (uiState.isFavorite) {
+            AppIcons.Favorite
+        } else {
+            AppIcons.FavoriteBorder
+        },
+        actionIconContentDescription = stringResource(id = R.string.favoriteIcon),
+        onActionClick = { onFavoriteClick(uiState.rateDetail) },
+        actionIconColor = Color.Red,
+        onNavigationClick = { onBackClick() }
     ) { padding ->
 
-        LoadingView(isVisible = state.isLoading)
+        DetailShimmerView(modifier = modifier.padding(padding), isVisible = uiState.isLoading)
 
         RetryView(
-            isVisible = state.isError,
-            retryMessage = state.errorMsg,
-            icon = AppIcons.Warning
-        ) { viewModel.onEvent(DetailUiEvent.Retry) }
-
-        ContentView(
             modifier = modifier.padding(padding),
-            isVisible = state.isLoaded,
-            rateDetail = state.rateDetail
+            isVisible = uiState.isError,
+            retryMessage = uiState.errorMsg,
+            icon = AppIcons.Warning,
+            onRetry = onRetry
+        )
+
+        DataView(
+            modifier = modifier.padding(padding),
+            isVisible = uiState.isLoaded,
+            rateDetail = uiState.rateDetail
         )
     }
 }
 
 @Composable
-private fun ContentView(
+private fun DataView(
     modifier: Modifier,
     isVisible: Boolean,
     rateDetail: ExchangeDetailRate?,
@@ -140,7 +145,94 @@ private fun ContentView(
 }
 
 @Composable
-@ReferenceDevices
+fun DetailShimmerView(
+    modifier: Modifier = Modifier,
+    isVisible: Boolean
+) {
+    ShimmerView(
+        modifier = modifier,
+        isVisible = isVisible,
+    ) { shimmerAxis ->
+        Column(
+            modifier = modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(
+                space = 30.dp,
+                alignment = Alignment.CenterVertically
+            ),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .size(150.dp)
+                    .shimmerBackground(
+                        gradient = ShimmerGradient.Linear(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shimmerAxis = shimmerAxis
+                        )
+                    )
+                    .padding(vertical = 15.dp),
+            )
+            Box(
+                modifier = Modifier
+                    .size(270.dp, 22.dp)
+                    .clip(CircleShape)
+                    .background(Color.Gray)
+                    .shimmerBackground(
+                        gradient = ShimmerGradient.Linear(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shimmerAxis = shimmerAxis
+                        )
+                    ),
+            )
+            Box(
+                modifier = Modifier
+                    .size(150.dp, 18.dp)
+                    .clip(CircleShape)
+                    .background(Color.Gray)
+                    .shimmerBackground(
+                        gradient = ShimmerGradient.Linear(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shimmerAxis = shimmerAxis
+                        )
+                    ),
+            )
+            Box(
+                modifier = Modifier
+                    .size(120.dp, 18.dp)
+                    .clip(CircleShape)
+                    .background(Color.Gray)
+                    .shimmerBackground(
+                        gradient = ShimmerGradient.Linear(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shimmerAxis = shimmerAxis
+                        )
+                    ),
+            )
+            Box(
+                modifier = Modifier
+                    .size(240.dp, 18.dp)
+                    .clip(CircleShape)
+                    .background(Color.Gray)
+                    .shimmerBackground(
+                        gradient = ShimmerGradient.Linear(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shimmerAxis = shimmerAxis
+                        )
+                    ),
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun DetailShimmerPreview() {
+    DetailShimmerView(isVisible = true)
+}
+
+@Composable
+@Preview
 fun ContentPreview() {
     val rateDetail = ExchangeDetailRate(
         "Id",
@@ -150,5 +242,5 @@ fun ContentPreview() {
         rateUsd = 0.16544654.toBigDecimal(),
         timestamp = 1324654312
     )
-    ContentView(modifier = Modifier, isVisible = true, rateDetail = rateDetail)
+    DataView(modifier = Modifier, isVisible = true, rateDetail = rateDetail)
 }

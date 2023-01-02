@@ -15,25 +15,30 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.ui.common.ThemeType
-import com.example.ui.common.component.bar.TopAppBar
-import com.example.ui.common.component.view.LoadingView
+import com.example.ui.common.component.screen.TopBarScaffold
+import com.example.ui.common.component.view.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     viewModel: SettingViewModel = hiltViewModel()
 ) {
-    val uiState = viewModel.state.value
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = stringResource(id = R.string.setting),
-                colors = TopAppBarDefaults
-                    .centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.background),
-            )
-        }
+    SettingScreenContent(
+        modifier = modifier,
+        uiState = viewModel.state.value,
+        onChangeTheme = { viewModel.onEvent(SettingUiEvent.ChangeTheme(it)) }
+    )
+}
+
+@Composable
+private fun SettingScreenContent(
+    modifier: Modifier = Modifier,
+    uiState: SettingUiState,
+    onChangeTheme: (theme: ThemeType) -> Unit
+) {
+    TopBarScaffold(
+        title = stringResource(id = R.string.setting),
     ) { padding ->
 
         LoadingView(isVisible = uiState.isLoading)
@@ -41,10 +46,8 @@ fun SettingScreen(
         ContentView(
             modifier = modifier.padding(padding),
             isVisible = uiState.isLoaded,
-            currentThemeType = uiState.currentThemeType
-        ) {
-            viewModel.onEvent(SettingUiEvent.ChangeTheme(it))
-        }
+            currentThemeType = uiState.currentThemeType, onChangeTheme = onChangeTheme
+        )
     }
 }
 
@@ -85,9 +88,9 @@ private fun ContentView(
                         leadingIcon = {
                             AnimatedVisibility(visible = currentThemeType == type) {
                                 Icon(
-                                    Icons.Filled.Check,
-                                    contentDescription = "Check Icon",
-                                    Modifier.size(AssistChipDefaults.IconSize)
+                                    modifier = Modifier.size(AssistChipDefaults.IconSize),
+                                    imageVector = Icons.Filled.Check,
+                                    contentDescription = stringResource(id = R.string.checkIconDescription)
                                 )
                             }
                         }
@@ -103,5 +106,5 @@ private fun ContentView(
 @Preview(showSystemUi = true)
 @Composable
 fun ContentPreview() {
-    ContentView(currentThemeType = ThemeType.SYSTEM, isVisible = true) {}
+    SettingScreenContent(uiState = SettingUiState.SetSetting(ThemeType.SYSTEM), onChangeTheme = {})
 }

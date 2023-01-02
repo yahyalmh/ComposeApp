@@ -1,17 +1,19 @@
 package com.example.search
 
 import androidx.lifecycle.viewModelScope
+import com.example.data.common.model.ExchangeRate
+import com.example.favorite.FavoriteRatesInteractor
+import com.example.rate.ExchangeRateInteractor
 import com.example.ui.common.BaseViewModel
 import com.example.ui.common.SharedState
 import com.example.ui.common.UIEvent
 import com.example.ui.common.UIState
-import com.example.ui.common.ext.retryWithPolicy
-import com.example.data.common.model.ExchangeRate
-import com.example.favorite.FavoriteRatesInteractor
-import com.example.rate.ExchangeRateInteractor
+import com.example.ui.common.connectivity.ConnectivityMonitor
+import com.example.ui.common.ext.retryOnNetworkConnection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,8 +22,10 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val exchangeRateInteractor: ExchangeRateInteractor,
     private val favoriteRatesInteractor: FavoriteRatesInteractor,
+    private val connectivityMonitor: ConnectivityMonitor,
 ) : BaseViewModel<SearchUiState, SearchUiEvent>(SearchUiState.Start()) {
     private val searchFlow = MutableStateFlow(state.value.query)
+    lateinit var searchJob: Job
 
     init {
         changeBottomBarVisibility(false)
@@ -42,14 +46,19 @@ class SearchViewModel @Inject constructor(
             .mapLatest { query ->
                 when {
                     query.isBlank() && query.isEmpty() -> setState(SearchUiState.Start())
-                    query.isNotResetState() -> searchQuery(query)
+                    query.isNotResetState() -> {
+                        if (::searchJob.isInitialized && searchJob.isActive) {
+                            searchJob.cancel()
+                        }
+                        searchQuery(query)
+                    }
                 }
             }.launchIn(viewModelScope)
     }
 
     private fun searchQuery(query: String) {
-        setState(SearchUiState.Loading(query = state.value.query))
-        combine(
+        setState(SearchUiState.Loading(query = query))
+        searchJob = combine(
             exchangeRateInteractor.getRates().map { rates ->
                 rates.filter {
                     it.symbol.contains(query, ignoreCase = true)
@@ -63,25 +72,24 @@ class SearchViewModel @Inject constructor(
                     SearchUiState.Loaded(
                         result = result,
                         favoriteRates = favoriteRates,
-                        state.value.query
+                        query = state.value.query
                     )
                 )
             }
         }
-            .retryWithPolicy { e -> handleRetry(e) }
+            .retryOnNetworkConnection(connectivityMonitor) { e -> handleAutoRetry(e) }
             .catch { e -> handleError(e) }
             .launchIn(viewModelScope)
     }
 
     private fun handleError(e: Throwable) {
         searchFlow.value = restString
-        val errorMessage = e.message ?: "Error while searching rates"
-        setState(SearchUiState.Retry(errorMessage, query = state.value.query))
+        setState(SearchUiState.Retry(e.message, query = state.value.query))
     }
 
-    private fun handleRetry(e: Throwable) {
-        val autoRetryMsg = e.message ?: "No result for \"${state.value.query}\""
-        setState(SearchUiState.AutoRetry(autoRetryMsg, query = state.value.query))
+    private fun handleAutoRetry(e: Throwable) {
+        searchFlow.value = restString
+        setState(SearchUiState.AutoRetry(e.message, query = state.value.query))
     }
 
     private fun handleFavorite(rate: ExchangeRate) {
@@ -104,11 +112,9 @@ class SearchViewModel @Inject constructor(
             SearchUiEvent.NavigationBack -> changeBottomBarVisibility(true)
             SearchUiEvent.Retry -> {
                 searchFlow.value = state.value.query
-                setState(SearchUiState.Search(state.value.query))
             }
             is SearchUiEvent.QueryChange -> {
                 searchFlow.tryEmit(event.text)
-                setState(SearchUiState.Search(event.text))
             }
             SearchUiEvent.ClearSearch -> {
                 searchFlow.value = ""
@@ -140,27 +146,25 @@ sealed class SearchUiState(
     val isAutoRetry: Boolean = false,
     val isEmpty: Boolean = false,
     val isStart: Boolean = false,
-    val retryMsg: String = "",
-    val autoRetryMsg: String = "",
+    val retryMsg: String? = null,
+    val autoRetryMsg: String? = null,
     var query: String
 ) : UIState {
     class Loading(query: String) : SearchUiState(isLoading = true, query = query)
 
-    class Retry(retryMsg: String, query: String) : SearchUiState(
+    class Retry(retryMsg: String? = null, query: String) : SearchUiState(
         isRetry = true,
         retryMsg = retryMsg,
         isKeyboardHidden = true,
         query = query
     )
 
-    class AutoRetry(autoRetryMsg: String, query: String) : SearchUiState(
+    class AutoRetry(autoRetryMsg: String? = null, query: String) : SearchUiState(
         isAutoRetry = true,
         isKeyboardHidden = true,
         autoRetryMsg = autoRetryMsg,
         query = query
     )
-
-    class Search(text: String) : SearchUiState(query = text, isLoading = true)
 
     class Empty(query: String = "") : SearchUiState(isEmpty = true, query = query)
 

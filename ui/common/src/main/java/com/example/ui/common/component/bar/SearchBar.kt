@@ -12,7 +12,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -145,32 +148,6 @@ fun SearchBar(
         }
     }
     SideEffect { focusRequester.requestFocus() }
-}
-
-@Composable
-fun SearchBarScaffold(
-    modifier: Modifier = Modifier,
-    hint: String,
-    onQueryChange: (query: String) -> Unit,
-    onCancelClick: () -> Unit,
-    content: @Composable () -> Unit
-) {
-    Surface(
-        modifier = modifier
-            .background(MaterialTheme.colorScheme.surface)
-            .fillMaxSize()
-    ) {
-        Column(modifier = modifier.background(MaterialTheme.colorScheme.surface)) {
-
-            SearchBar(
-                modifier = modifier.background(MaterialTheme.colorScheme.surface),
-                hint = hint,
-                onQueryChange = onQueryChange,
-                onCancelClick = onCancelClick
-            )
-            content()
-        }
-    }
 }
 
 @Preview(uiMode = UI_MODE_NIGHT_YES)

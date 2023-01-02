@@ -5,9 +5,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -15,7 +12,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 
 @Composable
 fun <T> BaseLazyColumn(
@@ -39,30 +35,14 @@ fun <T> BaseLazyColumn(
     }
 }
 
-@Composable
-fun BaseCenterColumn(
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        content()
-    }
-}
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BaseLazyColumn(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     models: List<@Composable () -> Unit>,
     stickyHeader: @Composable (() -> Unit)? = null,
     lazyListState: LazyListState = rememberLazyListState(),
-    isVisible: Boolean = true,
+    isVisible: Boolean = false,
 ) {
     AnimatedVisibility(
         visible = isVisible,
@@ -76,7 +56,7 @@ fun BaseLazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             stickyHeader?.let { stickyHeader { it() } }
-            items(models){it()}
+            items(models) { it() }
         }
     }
 }
@@ -87,7 +67,7 @@ fun BaseLazyColumn(
     modifier: Modifier,
     models: Map<@Composable () -> Unit, List<@Composable () -> Unit>>,
     lazyListState: LazyListState = rememberLazyListState(),
-    isVisible: Boolean = true,
+    isVisible: Boolean = false,
 ) {
     AnimatedVisibility(
         visible = isVisible,
@@ -100,8 +80,8 @@ fun BaseLazyColumn(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            models.forEach {(initial, ratesForInitial) ->
-                 stickyHeader { initial() }
+            models.forEach { (initial, ratesForInitial) ->
+                stickyHeader { initial() }
                 items(ratesForInitial) { it() }
             }
         }

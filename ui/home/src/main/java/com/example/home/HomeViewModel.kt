@@ -1,14 +1,15 @@
 package com.example.home
 
 import androidx.lifecycle.viewModelScope
-import com.example.ui.common.BaseViewModel
-import com.example.ui.common.UIEvent
-import com.example.ui.common.UIState
-import com.example.ui.common.ext.retryWithPolicy
 import com.example.data.common.model.ExchangeRate
 import com.example.favorite.FavoriteRatesInteractor
 import com.example.home.util.Constant
 import com.example.rate.ExchangeRateInteractor
+import com.example.ui.common.BaseViewModel
+import com.example.ui.common.UIEvent
+import com.example.ui.common.UIState
+import com.example.ui.common.connectivity.ConnectivityMonitor
+import com.example.ui.common.ext.retryOnNetworkConnection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
@@ -25,7 +26,8 @@ import javax.inject.Inject
 @HiltViewModel
 open class HomeViewModel @Inject constructor(
     private val exchangeRateInteractor: ExchangeRateInteractor,
-    private val favoriteRatesInteractor: FavoriteRatesInteractor
+    private val favoriteRatesInteractor: FavoriteRatesInteractor,
+    private val connectivityMonitor: ConnectivityMonitor,
 ) : BaseViewModel<HomeUiState, HomeUiEvent>(HomeUiState.Loading) {
 
     init {
@@ -39,7 +41,7 @@ open class HomeViewModel @Inject constructor(
         ) { rates, favoriteRates ->
             setState(HomeUiState.Loaded(rates = rates, favoriteRates = favoriteRates))
         }
-            .retryWithPolicy { e -> handleAutoRetry(e) }
+            .retryOnNetworkConnection(connectivityMonitor) { e -> handleAutoRetry(e) }
             .catch { e -> handleRetry(e) }
             .launchIn(viewModelScope)
     }

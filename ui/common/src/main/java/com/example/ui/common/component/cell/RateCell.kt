@@ -7,6 +7,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -23,6 +25,9 @@ import androidx.compose.ui.unit.dp
 import com.example.data.common.model.ExchangeRate
 import com.example.ui.common.R
 import com.example.ui.common.component.icon.AppIcons
+import com.example.ui.common.component.view.ShimmerAxis
+import com.example.ui.common.component.view.ShimmerGradient
+import com.example.ui.common.component.view.shimmerBackground
 import java.util.*
 
 @Composable
@@ -122,6 +127,72 @@ private fun Content(
 }
 
 @Composable
+fun RateShimmerCell(
+    modifier: Modifier = Modifier,
+    shimmerAxis: ShimmerAxis,
+) {
+    Card(
+        modifier = modifier
+            .width(400.dp)
+            .height(120.dp)
+            .padding(8.dp),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Row(
+            modifier = modifier
+                .shimmerBackground(
+                    ShimmerGradient.Linear(
+                        MaterialTheme.colorScheme.secondaryContainer,
+                        shimmerAxis
+                    )
+                )
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = modifier
+                    .size(74.dp)
+                    .clip(CircleShape)
+                    .background(Color.Gray),
+            )
+            Column(
+                modifier = modifier.padding(start = 12.dp, 4.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Box(
+                    modifier = modifier
+                        .size(150.dp, 12.dp)
+                        .clip(CircleShape)
+                        .background(Color.Gray),
+                )
+                Box(
+                    modifier = modifier
+                        .size(100.dp, 10.dp)
+                        .clip(CircleShape)
+                        .background(Color.Gray),
+                )
+                Box(
+                    modifier = modifier
+                        .size(70.dp, 10.dp)
+                        .clip(CircleShape)
+                        .background(Color.Gray),
+                )
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            Column {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    imageVector = Icons.Default.FavoriteBorder,
+                    contentDescription = null,
+                    tint = Color.Gray
+                )
+                Spacer(modifier = Modifier.weight(1f))
+            }
+        }
+    }
+}
+
+@Composable
 fun ExchangeRate.toCell(
     favoritesRates: List<ExchangeRate>,
     navigateToDetail: (id: String) -> Unit,
@@ -138,6 +209,12 @@ fun ExchangeRate.toCell(
         onClick = { navigateToDetail(this.id) },
         onLeadingIconClick = onFavoriteClick
     )
+}
+
+@Preview
+@Composable
+fun RateShimmerCellPreview() {
+    RateShimmerCell(shimmerAxis = ShimmerAxis(200f, 200f, 400f, 400f))
 }
 
 @Preview

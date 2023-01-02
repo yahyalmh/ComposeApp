@@ -211,6 +211,20 @@ fun ExchangeRate.toCell(
     )
 }
 
+@Composable
+fun ExchangeRate.toCell(
+    navigateToDetail: (id: String) -> Unit,
+    onFavoriteClick: (rate: ExchangeRate) -> Unit
+): @Composable () -> Unit = {
+    val leadingIcon = AppIcons.Favorite
+    RateCell(
+        rate = this,
+        leadingIcon = leadingIcon,
+        onClick = { navigateToDetail(this.id) },
+        onLeadingIconClick = onFavoriteClick
+    )
+}
+
 @Preview
 @Composable
 fun RateShimmerCellPreview() {

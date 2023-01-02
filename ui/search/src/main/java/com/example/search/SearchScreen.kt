@@ -23,10 +23,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.data.common.model.ExchangeRate
 import com.example.detail.nav.navigateToDetail
 import com.example.ui.common.component.*
-import com.example.ui.common.component.bar.SearchBarScaffold
 import com.example.ui.common.component.cell.RateShimmerCell
 import com.example.ui.common.component.cell.toCell
 import com.example.ui.common.component.icon.AppIcons
+import com.example.ui.common.component.screen.SearchBarScaffold
 import com.example.ui.common.component.view.AutoRetryView
 import com.example.ui.common.component.view.EmptyView
 import com.example.ui.common.component.view.RetryView

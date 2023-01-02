@@ -13,36 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
-@Composable
-fun <T> BaseLazyColumn(
-    modifier: Modifier = Modifier,
-    lazyListState: LazyListState = rememberLazyListState(),
-    items: List<T>,
-    isVisible: Boolean = true,
-    cell: @Composable (T) -> Unit
-) {
-    AnimatedVisibility(
-        visible = isVisible,
-        enter = fadeIn(),
-        exit = fadeOut()
-    ) {
-        LazyColumn(
-            state = lazyListState,
-            modifier = modifier
-        ) {
-            items(items) { cell(it) }
-        }
-    }
-}
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BaseLazyColumn(
     modifier: Modifier = Modifier,
+    isVisible: Boolean = false,
+    lazyListState: LazyListState = rememberLazyListState(),
     models: List<@Composable () -> Unit>,
     stickyHeader: @Composable (() -> Unit)? = null,
-    lazyListState: LazyListState = rememberLazyListState(),
-    isVisible: Boolean = false,
 ) {
     AnimatedVisibility(
         visible = isVisible,
@@ -52,7 +30,7 @@ fun BaseLazyColumn(
         LazyColumn(
             modifier = modifier,
             state = lazyListState,
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             stickyHeader?.let { stickyHeader { it() } }
@@ -64,10 +42,10 @@ fun BaseLazyColumn(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BaseLazyColumn(
-    modifier: Modifier,
-    models: Map<@Composable () -> Unit, List<@Composable () -> Unit>>,
-    lazyListState: LazyListState = rememberLazyListState(),
+    modifier: Modifier = Modifier,
     isVisible: Boolean = false,
+    lazyListState: LazyListState = rememberLazyListState(),
+    models: Map<@Composable () -> Unit, List<@Composable () -> Unit>>,
 ) {
     AnimatedVisibility(
         visible = isVisible,

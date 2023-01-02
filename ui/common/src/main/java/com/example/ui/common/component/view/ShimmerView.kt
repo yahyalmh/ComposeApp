@@ -33,7 +33,7 @@ fun ShimmerView(
 ) {
     val padding = 12.dp
     AnimatedVisibility(
-        modifier = modifier.zIndex(-1f).testTag(TestTag.RETRY_VIEW),
+        modifier = modifier.testTag(TestTag.SHIMMER_VIEW),
         visible = isVisible,
         enter = fadeIn(),
         exit = fadeOut()

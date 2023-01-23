@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Compose</string>
+    <string name="not_connected">No Internet connection</string>
+    <string name="online">online</string>
+    <string name="offline">offline</string>
+    <string name="favorite">Favorite</string>
+    <string name="home">Home</string>
+    <string name="setting">Setting</string>
+</resources>
